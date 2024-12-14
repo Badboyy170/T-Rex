@@ -13,6 +13,7 @@ class GamePanel extends JPanel implements ActionListener {
     private Timer gameTimer;
     private T_Rex tRex;
     private List<Obstacle> obstacles;
+    private Timer obstacleTimer;
     private List<Cloud> clouds;
     private Road road;
     private boolean gameOver;
@@ -34,6 +35,10 @@ class GamePanel extends JPanel implements ActionListener {
     private boolean scoreSoundPlayed;
     private BufferedImage obstacleImage;
     private BufferedImage cloudImage;
+    private Timer cloudTimer;
+    private boolean darkMode = false;
+
+
 
     public GamePanel(String difficulty) {
         this.difficulty = difficulty;
@@ -96,6 +101,12 @@ class GamePanel extends JPanel implements ActionListener {
                 scoreSoundPlayed = true;
             } else if (score % 100 != 0) {
                 scoreSoundPlayed = false;
+            }
+
+            // Switch to dark mode when score reaches 1500
+            if (score >= 1500 && !darkMode) {
+                switchToDarkMode();
+                darkMode = true;
             }
 
             repaint();
@@ -216,7 +227,13 @@ class GamePanel extends JPanel implements ActionListener {
         // Load obstacle and cloud images once
         try {
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
-            cloudImage = ImageIO.read(new File("Assets/cloud.png"));
+            BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
+            int cloudWidth = originalCloudImage.getWidth() / 2; // Adjust the scale factor as needed
+            int cloudHeight = originalCloudImage.getHeight() / 2; // Adjust the scale factor as needed
+            cloudImage = new BufferedImage(cloudWidth, cloudHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = cloudImage.createGraphics();
+            g2d.drawImage(originalCloudImage.getScaledInstance(cloudWidth, cloudHeight, Image.SCALE_SMOOTH), 0, 0, null);
+            g2d.dispose();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -265,26 +282,41 @@ class GamePanel extends JPanel implements ActionListener {
         startScoreTimer();
     }
 
+    private void switchToDarkMode() {
+        setBackground(Color.decode("#2c2c2c")); // Dark background color
+        // Update other UI elements to dark mode if needed
+        // For example, change text color, button colors, etc.
+        //add dark mode sound effect (later)
+    }
+
     private void scheduleNextObstacle() {
+        if (obstacleTimer != null) {
+            obstacleTimer.stop();
+        }
         int delay = difficulty.equals("easy") ? 5000 + random.nextInt(5000) : 2000 + random.nextInt(5000);
-        new Timer(delay, e -> {
+        obstacleTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                SwingUtilities.invokeLater(() -> {
-                    obstacles.add(new Obstacle(getWidth(), getHeight(), obstacleImage)); // Pass the correct height
-                });
-                scheduleNextObstacle();
+                obstacles.add(new Obstacle(getWidth(), getHeight(), obstacleImage)); // Pass the correct height
+                scheduleNextObstacle(); // Schedule the next obstacle
             }
-        }).start();
+        });
+        obstacleTimer.setRepeats(false);
+        obstacleTimer.start();
     }
 
     private void scheduleNextCloud() {
-        int delay = 2000 + random.nextInt(3000);
-        new Timer(delay, e -> {
+        if (cloudTimer != null) {
+            cloudTimer.stop();
+        }
+        int delay = 5000 + random.nextInt(5000); // Increase the delay for cloud respawning
+        cloudTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
                 clouds.add(new Cloud(getWidth(), random.nextInt(getHeight() / 2), cloudImage));
-                scheduleNextCloud();
+                scheduleNextCloud(); // Schedule the next cloud
             }
-        }).start();
+        });
+        cloudTimer.setRepeats(false);
+        cloudTimer.start();
     }
 
     private void startScoreTimer() {
@@ -325,6 +357,9 @@ class GamePanel extends JPanel implements ActionListener {
         if (gameTimer != null) {
             gameTimer.stop();
         }
+        if (obstacleTimer != null) {
+            obstacleTimer.stop();
+        }
 
         // Start the game again
         startGame();
@@ -341,6 +376,9 @@ class GamePanel extends JPanel implements ActionListener {
         } else {
             paused = true;
             gameTimer.stop();
+            if (obstacleTimer != null) {
+                obstacleTimer.stop();
+            }
             showButtons();
         }
     }
