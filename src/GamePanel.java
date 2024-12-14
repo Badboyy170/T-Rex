@@ -1,9 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -120,6 +123,7 @@ class GamePanel extends JPanel implements ActionListener {
 
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         if (road != null) {
             road.draw(g); // Draw the road
@@ -134,13 +138,17 @@ class GamePanel extends JPanel implements ActionListener {
             obstacle.draw(g);
         }
         if (gameOver) {
-            g.setColor(Color.RED);
-            g.setFont(new Font("Arial", Font.BOLD, 36));
-            g.drawString("Game Over", getWidth() / 2 - 100, getHeight() / 2);
+            try {
+                g.drawImage(ImageIO.read(new File("Assets/Game-Over.png")), (int)(getWidth()/ 2.4) - 100, (int)(getHeight() / 4) , null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else if (paused) {
-            g.setColor(Color.BLUE);
-            g.setFont(new Font("Arial", Font.BOLD, 36));
-            g.drawString("Paused", getWidth() / 2 - 100, getHeight() / 2);
+            try {
+                g.drawImage(ImageIO.read(new File("Assets/Pause.png")), (int)(getWidth()/ 2.4) - 100, (int)(getHeight() / 4) , null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -161,6 +169,8 @@ class GamePanel extends JPanel implements ActionListener {
                         cloudTimer.stop();
                     }
                     break;
+                }else{
+//                    System.out.println("tRex.getX() = " +tRex.getX() + " | tRex.getX() = " +obstacle.getX());
                 }
             }
             for (Cloud cloud : clouds) {
