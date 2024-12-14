@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class MenuScreen {
+public class MenuScreen extends JPanel {
 
     public MenuScreen() {
         // Create the JFrame
@@ -26,11 +26,11 @@ public class MenuScreen {
         backgroundPanel.setLayout(new GridBagLayout()); // Center the buttons
         frame.setContentPane(backgroundPanel);
 
-        // Create buttons
-        JButton singlePlayerButton = createButton("Single Player");
-        JButton multiplayerButton = createButton("Multiplayer");
-        JButton aboutGameButton = createButton("About Game");
-        JButton closeButton = createButton("Close Game");
+        // Create buttons using ButtonFactory
+        JButton singlePlayerButton = ButtonFactory.createButton("Single Player");
+        JButton multiplayerButton = ButtonFactory.createButton("Multiplayer");
+        JButton aboutGameButton = ButtonFactory.createButton("About Game");
+        JButton closeButton = ButtonFactory.createButton("Close Game");
 
         // Add buttons to a transparent JPanel
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10)); // 4 rows with spacing
@@ -43,7 +43,6 @@ public class MenuScreen {
         // Center the button panel
         backgroundPanel.add(buttonPanel, new GridBagConstraints());
 
-        // Add action listeners for buttons
         // Add action listeners for buttons
         singlePlayerButton.addActionListener(e -> {
             frame.dispose(); // Close the menu screen
@@ -62,16 +61,6 @@ public class MenuScreen {
 
         // Show the frame
         frame.setVisible(true);
-    }
-
-    private JButton createButton(String text) {
-        JButton button = new RoundedButton(text);
-        button.setPreferredSize(new Dimension(200, 50)); // Typical button size
-        button.setBackground(new Color(70, 130, 180)); // Set background color
-        button.setForeground(Color.WHITE); // Set text color
-        button.setFont(new Font("Arial", Font.BOLD, 16)); // Set font
-        button.setFocusPainted(false); // Remove focus border
-        return button;
     }
 
     public static void main(String[] args) {

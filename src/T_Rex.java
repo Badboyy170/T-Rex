@@ -6,7 +6,8 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 class T_Rex {
-    private int x, y, width, height, yVelocity;
+    private int x, y, width, height;
+    private double yVelocity;
     private boolean jumping;
     private BufferedImage[] runningImages;
     private BufferedImage jumpingImage;
@@ -51,14 +52,15 @@ class T_Rex {
 
     public void jump() {
         if (!jumping) {
-            yVelocity = -30; // Reduce the jump velocity
+            yVelocity = -20; // Reduce the jump velocity
             jumping = true;
+            SoundPlayer.playSound("Assets/sounds/SFX_Jump.wav"); // Play jump sound
         }
     }
 
     public void update() {
         y += yVelocity;
-        yVelocity += 1;
+        yVelocity += 0.5;
         if (y >= groundY) {
             y = groundY;
             yVelocity = 0;
@@ -82,8 +84,7 @@ class T_Rex {
     }
 
     public Rectangle getBounds() {
-        int margin = -82; // Adjust this value to make the collision detection more sensitive
-        return new Rectangle(x - margin, y - margin, width + 2 * margin, height + 2 * margin);
+        return new Rectangle(x , y , width + 2 , height + 2 );
     }
 
     public Polygon getPolygon() {

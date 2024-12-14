@@ -14,7 +14,7 @@ class Road {
         width = panelWidth;
         height = 100; // Adjust the height as needed
 
-        // Load the road image
+        // Load the road image once
         try {
             BufferedImage originalImage = ImageIO.read(new File("Assets/road/road.png"));
             roadImage = resizeImage(originalImage, width, height);
@@ -33,9 +33,9 @@ class Road {
     }
 
     public void update() {
-        x -= 10; // Move the road to the left
-        if (x + width < 0) {
-            x = 0; // Reset the position to create a looping effect
+        x -= 10; // Adjust the speed as needed
+        if (x <= -width) {
+            x = 0; // Reset x to create a seamless loop
         }
     }
 
