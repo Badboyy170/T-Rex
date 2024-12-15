@@ -11,6 +11,9 @@ class Cloud {
         this.cloudImage = cloudImage;
     }
 
+    public Cloud(int width, int startY) {
+    }
+
     public void update() {
         x -= 5; // Move the cloud to the left
     }

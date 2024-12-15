@@ -296,7 +296,7 @@ class GamePanel extends JPanel implements ActionListener {
         int delay = difficulty.equals("easy") ? 5000 + random.nextInt(5000) : 2000 + random.nextInt(5000);
         obstacleTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                obstacles.add(new Obstacle(getWidth(), getHeight(), obstacleImage)); // Pass the correct height
+                obstacles.add(new Obstacle(getWidth(), getHeight())); // Pass the correct height
                 scheduleNextObstacle(); // Schedule the next obstacle
             }
         });

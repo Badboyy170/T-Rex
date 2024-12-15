@@ -95,4 +95,7 @@ class T_Rex {
                 new Point(x, y + height)
         ));
     }
+
+    public void duck() {
+    }
 }

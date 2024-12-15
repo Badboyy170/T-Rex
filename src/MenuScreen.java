@@ -48,6 +48,10 @@ public class MenuScreen extends JPanel {
             frame.dispose(); // Close the menu screen
             SwingUtilities.invokeLater(SinglePlayer::new); // Start the single player game
         });
+        multiplayerButton.addActionListener(e -> {
+            frame.dispose(); // Close the menu screen
+            SwingUtilities.invokeLater(MultiPlayer::new); // Start the single player game
+        });
 
         multiplayerButton.addActionListener(e ->
                 JOptionPane.showMessageDialog(frame, "Multiplayer selected!")
