@@ -15,12 +15,13 @@ public class Counter {
     int posstion_nums = 0;
 
     Counter(){
+
         // Load images
         numbers = new BufferedImage[10];
         try {
             for (int i = 0; i < numbers.length; i++) {
                 BufferedImage originalImage = ImageIO.read(new File("Assets/counter/" + i + ".png"));
-                numbers[i] = resizeImage(originalImage, 100, 100);
+                numbers[i] = resizeImage(originalImage, 90, 90);
             }
             BufferedImage originalJumpingImage = ImageIO.read(new File("Assets/counter/HI.png"));
             HI_img = resizeImage(originalJumpingImage, 100, 100);
@@ -31,6 +32,10 @@ public class Counter {
 
 
 
+    }
+
+    public int getScore() {
+        return score;
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -57,19 +62,19 @@ public class Counter {
         String scoreStr = String.valueOf(score);
         for (int i = 0; i < scoreStr.length(); i++) {
             int digit = Character.getNumericValue(scoreStr.charAt(i));
-            g.drawImage(numbers[digit], 1250 + (i * 50), 35, null);
+            g.drawImage(numbers[digit], 1250 + (i * 50), 25, null);
         }
 
         // رسم صورة "HI" وسجل أعلى النقاط
-        g.drawImage(HI_img, 920, 35, null);
+        g.drawImage(HI_img, 920, 20, null);
         String highScoreStr = String.valueOf(highScore);
         for (int i = 0; i < highScoreStr.length(); i++) {
             int digit = Character.getNumericValue(highScoreStr.charAt(i));
-            g.drawImage(numbers[digit], 1000 + (i * 50), 35, null);
+            g.drawImage(numbers[digit], 1000 + (i * 50), 25, null);
         }
     }
     public void resetScore() {
-        score = 0; // إعادة تعيين النقاط عند بدء لعبة جديدة
+        score = 0; // restart score
     }
 
 

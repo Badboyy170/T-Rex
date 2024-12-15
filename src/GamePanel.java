@@ -19,8 +19,6 @@ class GamePanel extends JPanel implements ActionListener {
     private boolean gameOver;
     private boolean paused;
     private Random random;
-    private int score;
-    private int displayedScore;
     private int lives;
     private JButton continueButton;
     private JButton restartButton;
@@ -37,6 +35,7 @@ class GamePanel extends JPanel implements ActionListener {
     private BufferedImage cloudImage;
     private Timer cloudTimer;
     private boolean darkMode = false;
+    private Counter counter;
 
 
 
@@ -51,6 +50,7 @@ class GamePanel extends JPanel implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             tRex = new T_Rex(getHeight());
             road = new Road(0, getHeight() - 100, getWidth()); // Initialize the road
+            counter = new Counter();
 
             int scaledWidth = restartIcon.getIconWidth();
             int scaledHeight = restartIcon.getIconHeight();
@@ -65,6 +65,8 @@ class GamePanel extends JPanel implements ActionListener {
         if (!gameOver && !paused) {
             tRex.update();
             road.update(); // Update the road
+            counter.updateScore();
+
             for (Obstacle obstacle : obstacles) {
                 obstacle.update();
                 if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon())) {
@@ -90,21 +92,21 @@ class GamePanel extends JPanel implements ActionListener {
             obstacles.removeIf(obstacle -> obstacle.getX() < 0);
             clouds.removeIf(cloud -> cloud.getX() < 0);
 
-            // Smooth score animation
-            if (displayedScore < score) {
-                displayedScore += Math.min(5, score - displayedScore);
-            }
+//            // Smooth score animation
+//            if (displayedScore < score) {
+//                displayedScore += Math.min(5, score - displayedScore);
+//            }
 
             // Play sound every 100 score gained
-            if (score % 100 == 0 && score != 0 && !scoreSoundPlayed) {
+            if (counter.getScore() % 500 == 0 && counter.getScore() != 0 && !scoreSoundPlayed) {
                 SoundPlayer.playSound("Assets/sounds/score.wav");
                 scoreSoundPlayed = true;
-            } else if (score % 100 != 0) {
+            } else if (counter.getScore() % 500 != 0) {
                 scoreSoundPlayed = false;
             }
 
             // Switch to dark mode when score reaches 1500
-            if (score >= 1500 && !darkMode) {
+            if (counter.getScore() >= 5000 && !darkMode) {
                 switchToDarkMode();
                 darkMode = true;
             }
@@ -127,8 +129,6 @@ class GamePanel extends JPanel implements ActionListener {
         gameOver = false;
         paused = false;
         random = new Random();
-        score = 0;
-        displayedScore = 0;
         scoreSoundPlayed = false;
 
         if (difficulty.equals("easy")) {
@@ -252,16 +252,14 @@ class GamePanel extends JPanel implements ActionListener {
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(g);
         }
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, 24));
-        g.drawString("Score: " + displayedScore, 10, 30);
+
 
         // Draw heart images for lives
         int heartX = 10;
         int heartY = 60;
         int heartSpacing = 10;
         for (int i = 0; i < lives; i++) {
-            g.drawImage(heartImage, heartX + (i * (heartImage.getWidth(null) + heartSpacing)), heartY, null);
+            g.drawImage(heartImage, heartX + (i * (heartImage.getWidth(null) + heartSpacing)), 30, null);
         }
 
         // In the display method
@@ -271,6 +269,7 @@ class GamePanel extends JPanel implements ActionListener {
             g.drawString("Game Over", getWidth() / 2 - 100, getHeight() / 2);
             restartIcon.paintIcon(this, g, restartIconBounds.x, restartIconBounds.y);
         }
+        counter.draw(g);
     }
 
     public void startGame() {
@@ -323,8 +322,7 @@ class GamePanel extends JPanel implements ActionListener {
         int scoreIncrement = difficulty.equals("easy") ? 5 : 2;
         new Timer(1000, e -> {
             if (!gameOver && !paused) {
-                score += scoreIncrement;
-                if (score % 100 == 0) {
+                if (counter.getScore() % 500 == 0) {
                     increaseGameSpeed();
                 }
             }
@@ -344,8 +342,7 @@ class GamePanel extends JPanel implements ActionListener {
         clouds.clear();
         tRex = new T_Rex(getHeight());
         road = new Road(0, getHeight() - 100, getWidth()); // Reinitialize the road
-        score = 0;
-        displayedScore = 0;
+
 
         if (difficulty.equals("easy")) {
             lives = 3;
