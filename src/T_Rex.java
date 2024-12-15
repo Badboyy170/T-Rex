@@ -58,6 +58,12 @@ class T_Rex {
         }
     }
 
+    public void duck() {
+        // Implement ducking functionality
+        height = 160; // Reduce the height to simulate ducking
+        y = groundY + (320 - height); // Adjust the y position accordingly
+    }
+
     public void update() {
         y += yVelocity;
         yVelocity += 0.5;
@@ -94,8 +100,5 @@ class T_Rex {
                 new Point(x + width, y + height),
                 new Point(x, y + height)
         ));
-    }
-
-    public void duck() {
     }
 }

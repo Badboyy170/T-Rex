@@ -53,10 +53,6 @@ public class MenuScreen extends JPanel {
             SwingUtilities.invokeLater(MultiPlayer::new); // Start the single player game
         });
 
-        multiplayerButton.addActionListener(e ->
-                JOptionPane.showMessageDialog(frame, "Multiplayer selected!")
-        );
-
         aboutGameButton.addActionListener(e ->
                 JOptionPane.showMessageDialog(frame, "This is the T-Rex game! A fun endless runner game.")
         );
