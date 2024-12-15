@@ -16,12 +16,14 @@ class GamePanel extends JPanel implements ActionListener {
     private Timer obstacleTimer;
     private Timer cloudTimer;
     private T_Rex tRex;
+    private Counter counter;
     private List<Obstacle> obstacles;
     private List<Cloud> clouds;
     private Road road;
     private boolean gameOver;
     private boolean paused;
     private Random random;
+
 
     public GamePanel() {
         setBackground(Color.decode("#f8f8f8"));
@@ -52,6 +54,7 @@ class GamePanel extends JPanel implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             tRex = new T_Rex(getHeight());
             road = new Road(0, getHeight() - 100, getWidth()); // Initialize the road
+            counter = new Counter();
             startGame();
         });
     }
@@ -101,6 +104,7 @@ class GamePanel extends JPanel implements ActionListener {
         tRex = new T_Rex(getHeight());
         road = new Road(0, getHeight() - 100, getWidth()); // Reinitialize the road
         startGame();
+        counter.resetScore();
     }
 
     private void togglePause() {
@@ -123,7 +127,6 @@ class GamePanel extends JPanel implements ActionListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         if (road != null) {
             road.draw(g); // Draw the road
@@ -139,17 +142,20 @@ class GamePanel extends JPanel implements ActionListener {
         }
         if (gameOver) {
             try {
-                g.drawImage(ImageIO.read(new File("Assets/Game-Over.png")), (int)(getWidth()/ 2.4) - 100, (int)(getHeight() / 4) , null);
+                g.drawImage(ImageIO.read(new File("Assets/Game-Over.png")), (int)(getWidth()/ 2.3) - 100, (getHeight() / 4) , null);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else if (paused) {
             try {
-                g.drawImage(ImageIO.read(new File("Assets/Pause.png")), (int)(getWidth()/ 2.4) - 100, (int)(getHeight() / 4) , null);
+                g.drawImage(ImageIO.read(new File("Assets/Pause.png")), (int)(getWidth()/ 2.3) - 100, (getHeight() / 4) , null);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }else{
+            counter.draw(g);
         }
+
     }
 
     @Override
@@ -157,6 +163,7 @@ class GamePanel extends JPanel implements ActionListener {
         if (!gameOver && !paused) {
             tRex.update();
             road.update(); // Update the road
+            counter.updateScore();
             for (Obstacle obstacle : obstacles) {
                 obstacle.update();
                 if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon())) {
@@ -169,8 +176,6 @@ class GamePanel extends JPanel implements ActionListener {
                         cloudTimer.stop();
                     }
                     break;
-                }else{
-//                    System.out.println("tRex.getX() = " +tRex.getX() + " | tRex.getX() = " +obstacle.getX());
                 }
             }
             for (Cloud cloud : clouds) {
