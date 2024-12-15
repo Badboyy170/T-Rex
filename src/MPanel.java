@@ -184,7 +184,7 @@ class MPanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         Timer obstacleTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                obstacles.add(new Obstacle(getWidth(), getHeight() / 2));
+                obstacles.add(new Obstacle(getWidth(), getHeight() / 2, obstacleImage));
                 scheduleNextObstacle(obstacles);
             }
         });

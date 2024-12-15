@@ -5,7 +5,7 @@ class Obstacle {
     private int x, y, width, height;
     private BufferedImage obstacleImage;
 
-    public Obstacle(int startX, int panelHeight) {
+    public Obstacle(int startX, int panelHeight, BufferedImage obstacleImage) {
         this.x = startX;
         this.width = 170;
         this.height = 200;
