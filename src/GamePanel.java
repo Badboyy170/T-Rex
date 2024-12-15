@@ -163,6 +163,7 @@ class GamePanel extends JPanel implements ActionListener {
         restartButton.addActionListener(e -> {
             restartGame();
             hideButtons();
+            counter.resetScore();
         });
 
         menuButton.addActionListener(e -> {
