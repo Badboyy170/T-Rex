@@ -9,105 +9,106 @@ import java.util.List;
 import java.util.Random;
 
 class GamePanel extends JPanel implements ActionListener {
-    private Timer gameTimer;
-    private Timer obstacleTimer;
-    private Timer cloudTimer;
-    private T_Rex tRex;
-    private List<Obstacle> obstacles;
-    private List<Cloud> clouds;
-    private Road road;
-    private boolean gameOver;
-    private boolean paused;
-    private Random random;
+    private Timer gameTimer; // مؤقت للتحكم في اللعبة
+    private Timer obstacleTimer; // مؤقت لإنشاء العقبات بشكل دوري
+    private Timer cloudTimer; // مؤقت لإنشاء السحب بشكل دوري
+    private T_Rex tRex; // كائن الديناصور
+    private List<Obstacle> obstacles; // قائمة العقبات في اللعبة
+    private List<Cloud> clouds; // قائمة السحب في اللعبة
+    private Road road; // كائن الطريق
+    private boolean gameOver; // حالة اللعبة (انتهت أم لا)
+    private boolean paused; // حالة التوقف المؤقت
+    private Random random; // مولد أرقام عشوائية
 
     public GamePanel() {
-        setBackground(Color.decode("#f8f8f8"));
-        obstacles = new ArrayList<>();
-        clouds = new ArrayList<>();
-        gameOver = false;
-        paused = false;
-        random = new Random();
+        setBackground(Color.decode("#f8f8f8")); // تعيين لون الخلفية
+        obstacles = new ArrayList<>(); // تهيئة قائمة العقبات
+        clouds = new ArrayList<>(); // تهيئة قائمة السحب
+        gameOver = false; // تعيين حالة اللعبة كبداية
+        paused = false; // تعيين حالة التوقف كبداية
+        random = new Random(); // إنشاء مولد الأرقام العشوائية
 
+        // إضافة مستمع للأزرار
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    tRex.jump();
-                } else if (e.getKeyCode() == KeyEvent.VK_R) {
-                    restartGame();
-                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    togglePause();
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) { // إذا تم الضغط على مفتاح المسافة
+                    tRex.jump(); // الديناصور يقفز
+                } else if (e.getKeyCode() == KeyEvent.VK_R) { // إذا تم الضغط على مفتاح R
+                    restartGame(); // إعادة تشغيل اللعبة
+                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) { // إذا تم الضغط على مفتاح ESCAPE
+                    togglePause(); // تبديل حالة التوقف المؤقت
                 }
             }
         });
-        setFocusable(true);
+        setFocusable(true); // تمكين التركيز على لوحة اللعبة
     }
 
     @Override
     public void addNotify() {
         super.addNotify();
         SwingUtilities.invokeLater(() -> {
-            tRex = new T_Rex(getHeight());
-            road = new Road(0, getHeight() - 100, getWidth()); // Initialize the road
-            startGame();
+            tRex = new T_Rex(getHeight()); // إنشاء كائن الديناصور بناءً على ارتفاع اللوحة
+            road = new Road(0, getHeight() - 100, getWidth()); // إنشاء كائن الطريق
+            startGame(); // بدء اللعبة
         });
     }
 
     public void startGame() {
-        gameTimer = new Timer(30, this);
-        gameTimer.start();
-        scheduleNextObstacle();
-        scheduleNextCloud();
+        gameTimer = new Timer(30, this); // مؤقت لتحديث اللعبة كل 30 مللي ثانية
+        gameTimer.start(); // بدء المؤقت
+        scheduleNextObstacle(); // جدولة العقبات
+        scheduleNextCloud(); // جدولة السحب
     }
 
     private void scheduleNextObstacle() {
-        int delay = 5000 + random.nextInt(5000);
+        int delay = 5000 + random.nextInt(5000); // تأخير عشوائي بين 5-10 ثوانٍ
         obstacleTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!gameOver && !paused) {
-                    obstacles.add(new Obstacle(getWidth(), getHeight()));
-                    scheduleNextObstacle();
+                    obstacles.add(new Obstacle(getWidth(), getHeight())); // إضافة عقبة جديدة
+                    scheduleNextObstacle(); // جدولة العقبة التالية
                 }
             }
         });
-        obstacleTimer.setRepeats(false);
-        obstacleTimer.start();
+        obstacleTimer.setRepeats(false); // جعل المؤقت ينفذ مرة واحدة فقط
+        obstacleTimer.start(); // بدء المؤقت
     }
 
     private void scheduleNextCloud() {
-        int delay = 2000 + random.nextInt(3000);
+        int delay = 2000 + random.nextInt(3000); // تأخير عشوائي بين 2-5 ثوانٍ
         cloudTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!gameOver && !paused) {
-                    clouds.add(new Cloud(getWidth(), random.nextInt(getHeight() / 2)));
-                    scheduleNextCloud();
+                    clouds.add(new Cloud(getWidth(), random.nextInt(getHeight() / 2))); // إضافة سحابة جديدة
+                    scheduleNextCloud(); // جدولة السحابة التالية
                 }
             }
         });
-        cloudTimer.setRepeats(false);
-        cloudTimer.start();
+        cloudTimer.setRepeats(false); // جعل المؤقت ينفذ مرة واحدة فقط
+        cloudTimer.start(); // بدء المؤقت
     }
 
     private void restartGame() {
-        gameOver = false;
-        paused = false;
-        obstacles.clear();
-        clouds.clear();
-        tRex = new T_Rex(getHeight());
-        road = new Road(0, getHeight() - 100, getWidth()); // Reinitialize the road
-        startGame();
+        gameOver = false; // إعادة تعيين حالة اللعبة
+        paused = false; // إعادة تعيين حالة التوقف
+        obstacles.clear(); // تفريغ قائمة العقبات
+        clouds.clear(); // تفريغ قائمة السحب
+        tRex = new T_Rex(getHeight()); // إعادة إنشاء الديناصور
+        road = new Road(0, getHeight() - 100, getWidth()); // إعادة إنشاء الطريق
+        startGame(); // بدء اللعبة من جديد
     }
 
     private void togglePause() {
         if (paused) {
-            paused = false;
+            paused = false; // استئناف اللعبة
             gameTimer.start();
             scheduleNextObstacle();
             scheduleNextCloud();
         } else {
-            paused = true;
+            paused = true; // إيقاف اللعبة
             gameTimer.stop();
             if (obstacleTimer != null) {
                 obstacleTimer.stop();
@@ -122,37 +123,37 @@ class GamePanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (road != null) {
-            road.draw(g); // Draw the road
+            road.draw(g); // رسم الطريق
         }
         for (Cloud cloud : clouds) {
-            cloud.draw(g);
+            cloud.draw(g); // رسم السحب
         }
         if (tRex != null) {
-            tRex.draw(g);
+            tRex.draw(g); // رسم الديناصور
         }
         for (Obstacle obstacle : obstacles) {
-            obstacle.draw(g);
+            obstacle.draw(g); // رسم العقبات
         }
         if (gameOver) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 36));
-            g.drawString("Game Over", getWidth() / 2 - 100, getHeight() / 2);
+            g.drawString("Game Over", getWidth() / 2 - 100, getHeight() / 2); // عرض رسالة انتهاء اللعبة
         } else if (paused) {
             g.setColor(Color.BLUE);
             g.setFont(new Font("Arial", Font.BOLD, 36));
-            g.drawString("Paused", getWidth() / 2 - 100, getHeight() / 2);
+            g.drawString("Paused", getWidth() / 2 - 100, getHeight() / 2); // عرض رسالة التوقف المؤقت
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!gameOver && !paused) {
-            tRex.update();
-            road.update(); // Update the road
+            tRex.update(); // تحديث حالة الديناصور
+            road.update(); // تحديث حالة الطريق
             for (Obstacle obstacle : obstacles) {
-                obstacle.update();
+                obstacle.update(); // تحديث حالة العقبات
                 if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon())) {
-                    gameOver = true;
+                    gameOver = true; // تعيين حالة اللعبة كمنتهية عند التصادم
                     gameTimer.stop();
                     if (obstacleTimer != null) {
                         obstacleTimer.stop();
@@ -164,11 +165,11 @@ class GamePanel extends JPanel implements ActionListener {
                 }
             }
             for (Cloud cloud : clouds) {
-                cloud.update();
+                cloud.update(); // تحديث حالة السحب
             }
-            obstacles.removeIf(obstacle -> obstacle.getX() < 0);
-            clouds.removeIf(cloud -> cloud.getX() < 0);
-            repaint();
+            obstacles.removeIf(obstacle -> obstacle.getX() < 0); // إزالة العقبات التي خرجت من الشاشة
+            clouds.removeIf(cloud -> cloud.getX() < 0); // إزالة السحب التي خرجت من الشاشة
+            repaint(); // إعادة رسم اللعبة
         }
     }
 }
