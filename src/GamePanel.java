@@ -19,6 +19,7 @@ class GamePanel extends JPanel implements ActionListener {
     private List<Mak> maks;
     private List<birdObstacle> birdObstacles;
     private Timer birdObstacleTimer;
+
     private BufferedImage birdObstacleImage;
     private Road road;
     private boolean gameOver;
