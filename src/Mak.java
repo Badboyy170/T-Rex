@@ -11,10 +11,18 @@ class Mak {
     public Mak(int startX,  BufferedImage makImage) {
         this.x = startX;
         this.y = 370;
-        this.makImage = makImage;
+        this.width = 150;
+        this.height = 120;
+        this.makImage = resizeImage(makImage, width, height);
     }
 
-    public Mak(int width, int startY) {
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resizedImage;
     }
 
     public void update() {

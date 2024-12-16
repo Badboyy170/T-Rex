@@ -88,27 +88,24 @@ class GamePanel extends JPanel implements ActionListener {
                 kanz.update();
                 if (CollisionDetection.isColliding(tRex.getPolygon(), kanz.getPolygon())) {
                     lives++;
-
+                    kanzs.clear();
+                    break;
                 }
-
-
             }
             for (Mak mak : maks) {
                 mak.update();
                 if (CollisionDetection.isColliding(tRex.getPolygon(), mak.getPolygon())) {
                     invisibilityPotionActive=true;
                     maks.clear();
-
-
+                    activateInvisibilityPotion();
+                    break;
                 }
-
-
             }
 
 
             for (Obstacle obstacle : obstacles) {
                 obstacle.update();
-                if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon())) {
+                if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon()) && !invisibilityPotionActive) {
                     lives--;
                     if (lives >= 1) {
                         SoundPlayer.playSound("Assets/sounds/life_lost.wav"); // Play life lost sound
@@ -129,7 +126,7 @@ class GamePanel extends JPanel implements ActionListener {
 
             for (birdObstacle birdObstacle : birdObstacles) {
                 birdObstacle.update();
-                if (CollisionDetection.isColliding(tRex.getPolygon(), birdObstacle.getPolygon())) {
+                if (CollisionDetection.isColliding(tRex.getPolygon(), birdObstacle.getPolygon()) && !invisibilityPotionActive) {
                     lives--;
                     if (lives >= 1) {
                         SoundPlayer.playSound("Assets/sounds/life_lost.wav");
@@ -293,34 +290,25 @@ class GamePanel extends JPanel implements ActionListener {
             }
         });
 
-        // Load and resize the heart image
-        Image originalHeartImage = new ImageIcon("Assets/heart.png").getImage();
-        int scaleHeartdWidth = originalHeartImage.getWidth(null) / 6; // Adjust the scale factor as needed
-        int scaleHeartdHeight = originalHeartImage.getHeight(null) / 6; // Adjust the scale factor as needed
-        heartImage = originalHeartImage.getScaledInstance(scaleHeartdWidth, scaleHeartdHeight, Image.SCALE_SMOOTH);
-
-        // Load obstacle and cloud images once
         try {
+            // Load and resize the heart image
+            Image originalHeartImage = new ImageIcon("Assets/heart.png").getImage();
+            int scaleHeartdWidth = originalHeartImage.getWidth(null) / 6; // Adjust the scale factor as needed
+            int scaleHeartdHeight = originalHeartImage.getHeight(null) / 6; // Adjust the scale factor as needed
+            heartImage = originalHeartImage.getScaledInstance(scaleHeartdWidth, scaleHeartdHeight, Image.SCALE_SMOOTH);
+
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
+            kanzImage= ImageIO.read(new File("Assets/heart.png"));
+            makImage = ImageIO.read(new File("Assets/potions/resetSpeed.png"));
 
             BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
-            BufferedImage originalKanzImage = ImageIO.read(new File("Assets/heart.png"));
-            BufferedImage originalMakImage = ImageIO.read(new File("Assets/potions/resetSpeed.png"));
-            int makWidth = originalKanzImage.getWidth() / 2; // Adjust the scale factor as needed
-            int makHeight = originalKanzImage.getHeight() / 2; // Adjust the scale factor as needed
-            int kanzWidth = originalKanzImage.getWidth() / 2; // Adjust the scale factor as needed
-            int kanzHeight = originalKanzImage.getHeight() / 2; // Adjust the scale factor as needed
             int cloudWidth = originalCloudImage.getWidth() / 2; // Adjust the scale factor as needed
             int cloudHeight = originalCloudImage.getHeight() / 2; // Adjust the scale factor as needed
             cloudImage = new BufferedImage(cloudWidth, cloudHeight, BufferedImage.TYPE_INT_ARGB);
-            kanzImage = new BufferedImage(kanzWidth, kanzHeight, BufferedImage.TYPE_INT_ARGB);
-            makImage = new BufferedImage(makWidth, makHeight, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g4d = makImage.createGraphics();
-            Graphics2D g3d = kanzImage.createGraphics();
+
+
             Graphics2D g2d = cloudImage.createGraphics();
-            g4d.drawImage(originalMakImage.getScaledInstance(makWidth, makHeight, Image.SCALE_SMOOTH), 0, 0, null);
             g2d.drawImage(originalCloudImage.getScaledInstance(cloudWidth, cloudHeight, Image.SCALE_SMOOTH), 0, 0, null);
-            g3d.drawImage(originalKanzImage.getScaledInstance(cloudWidth, cloudHeight, Image.SCALE_SMOOTH), 0, 0, null);
             g2d.dispose();
         } catch (IOException e) {
             e.printStackTrace();
@@ -415,6 +403,14 @@ class GamePanel extends JPanel implements ActionListener {
         invisibilityPotionTimer = new Timer(45000, e -> invisibilityPotionActive = false); // 45 seconds
         invisibilityPotionTimer.setRepeats(false);
         invisibilityPotionTimer.start();
+    }
+
+    private void drawInvisibleTime(Graphics g) {
+        if(invisibilityPotionActive){
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 24));
+            g.drawString("Invisibility Time: " + invisibilityPotionTimer.getDelay() / 1000 + "s", getWidth() / 2 - 150, 50);
+        }
     }
 
     private void scheduleNextbirdObstacle() {

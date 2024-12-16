@@ -10,13 +10,14 @@ class birdObstacle {
     private int animationFrame;
     private int animationCounter; // Add a counter for animation speed control
     private static final int ANIMATION_SPEED = 5;
-
+    private boolean debug;
     public birdObstacle(int startX, int panelHeight) {
         this.x = startX;
         this.width = 150;
         this.height = 120;
         this.y = panelHeight - height ; // Adjust y to be 50 pixels higher
         flyingImages = new BufferedImage[6];
+        this.debug = true; // Initialize the debug variable
         try {
             for (int i = 0; i < 6; i++) {
                 BufferedImage originalImage = ImageIO.read(new File("Assets/bird/" + (i + 1) + ".png"));
@@ -46,6 +47,11 @@ class birdObstacle {
     }
 
     public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
         g.drawImage(flyingImages[animationFrame], x, y, null);
     }
 
@@ -54,6 +60,7 @@ class birdObstacle {
     }
 
     public Polygon getPolygon() {
+        //(x1,y1)top left, (x2,y2)top right, (x3,y3)bottom right, (x4,y4)bottom left
         int[] xPoints = {x + 20, x + width - 20, x + width - 20, x + 20};
         int[] yPoints = {y + 20, y + 20, y + height - 20, y + height - 20};
         return new Polygon(xPoints, yPoints, xPoints.length);

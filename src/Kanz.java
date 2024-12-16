@@ -11,11 +11,21 @@ class Kanz{
     public Kanz(int startX,  BufferedImage kanzImage) {
         this.x = startX;
         this.y = 370;
-        this.kanzImage = kanzImage;
+        this.width = 150;
+        this.height = 120;
+        this.kanzImage = resizeImage(kanzImage, width, height);
         this.debug=true;
 
     }
 
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resizedImage;
+    }
 
     public void update() {
         x -= 5;
@@ -34,8 +44,8 @@ class Kanz{
         return x;
     }
     public Polygon getPolygon() {
-        int[] xPoints = {x  , x + width  , x + width , x };
-        int[] yPoints = {y  , y , y + height , y + height };
+        int[] xPoints = {x + 20 , x + width - 20 , x + width - 70, x +50 };
+        int[] yPoints = {y  + 30, y + 30 , y + height - 30, y + height -30 };
         return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }
