@@ -17,7 +17,9 @@ class GamePanel extends JPanel implements ActionListener {
     private List<Cloud> clouds;
     private List<Kanz> kanzs;
     private List<Mak> maks;
-
+    private List<birdObstacle> birdObstacles;
+    private Timer birdObstacleTimer;
+    private BufferedImage birdObstacleImage;
     private Road road;
     private boolean gameOver;
     private boolean paused;
@@ -97,11 +99,33 @@ class GamePanel extends JPanel implements ActionListener {
                 }
             }
 
+            for (birdObstacle birdObstacle : birdObstacles) {
+                birdObstacle.update();
+                if (CollisionDetection.isColliding(tRex.getPolygon(), birdObstacle.getPolygon())) {
+                    lives--;
+                    if (lives >= 1) {
+                        SoundPlayer.playSound("Assets/sounds/life_lost.wav"); // Play life lost sound
+                    }
+                    if (lives <= 0) {
+                        gameOver = true;
+                        gameTimer.stop();
+                        SoundPlayer.playSound("Assets/sounds/death.wav"); // Play death sound
+                    } else {
+                        birdObstacles.clear();
+                        clouds.clear();
+                        tRex = new T_Rex(getHeight());
+                    }
+                    counter.resetScore();
+                    break;
+                }
+            }
+
             for (Cloud cloud : clouds) {
                 cloud.update();
             }
             obstacles.removeIf(obstacle -> obstacle.getX() < 0);
             clouds.removeIf(cloud -> cloud.getX() < 0);
+            birdObstacles.removeIf(birdObstacle -> birdObstacle.getX() < 0);
             kanzs.removeIf(kanz -> kanz.getX() < 0);
             maks.removeIf(kanz -> kanz.getX() < 0);
 
@@ -140,6 +164,7 @@ class GamePanel extends JPanel implements ActionListener {
         clouds = new ArrayList<>();
         kanzs = new ArrayList<>();
         maks = new ArrayList<>();
+        birdObstacles = new ArrayList<>();
         gameOver = false;
         paused = false;
         random = new Random();
@@ -243,6 +268,8 @@ class GamePanel extends JPanel implements ActionListener {
         // Load obstacle and cloud images once
         try {
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
+            birdObstacleImage = ImageIO.read(new File("Assets/bird/1.png"));
+
             BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
             BufferedImage originalKanzImage = ImageIO.read(new File("Assets/monster.png"));
             BufferedImage originalMakImage = ImageIO.read(new File("Assets/heart.png"));
@@ -273,6 +300,9 @@ class GamePanel extends JPanel implements ActionListener {
         }
         for (Cloud cloud : clouds) {
             cloud.draw(g);
+        }
+        for (birdObstacle birdObstacle : birdObstacles) {
+            birdObstacle.draw(g);
         }
         for (Kanz kanz : kanzs) {
             kanz.draw(g);
@@ -320,6 +350,8 @@ class GamePanel extends JPanel implements ActionListener {
         gameTimer = new Timer(gameSpeed, this);
         gameTimer.start();
         scheduleNextObstacle();
+        scheduleNextbirdObstacle();
+
         scheduleNextCloud();
         scheduleNextKanz();
         scheduleNextMak();
@@ -339,6 +371,21 @@ class GamePanel extends JPanel implements ActionListener {
         // Update other UI elements to dark mode if needed
         // For example, change text color, button colors, etc.
         //add dark mode sound effect (later)
+    }
+
+    private void scheduleNextbirdObstacle() {
+        if (birdObstacleTimer != null) {
+            birdObstacleTimer.stop();
+        }//[5-10]
+        int delay = difficulty.equals("easy") ? 3000 + random.nextInt(3000) : 1000 + random.nextInt(1000);
+        birdObstacleTimer = new Timer(delay, e -> {
+            if (!gameOver && !paused) {
+                birdObstacles.add(new birdObstacle(getWidth(), getHeight(), birdObstacleImage));
+                scheduleNextbirdObstacle(); // Schedule the next bird obstacle
+            }
+        });
+        birdObstacleTimer.setRepeats(false);
+        birdObstacleTimer.start();
     }
 
     private void scheduleNextObstacle() {
@@ -425,6 +472,7 @@ class GamePanel extends JPanel implements ActionListener {
         gameOver = false;
         paused = false;
         obstacles.clear();
+        birdObstacles.clear();
         clouds.clear();
         kanzs.clear();
         maks.clear();
@@ -447,7 +495,9 @@ class GamePanel extends JPanel implements ActionListener {
         if (obstacleTimer != null) {
             obstacleTimer.stop();
         }
-
+        if (birdObstacleTimer != null) {
+            birdObstacleTimer.stop();
+        }
         // Start the game again
         startGame();
     }
