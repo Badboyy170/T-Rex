@@ -14,6 +14,8 @@ class MPanel extends JPanel implements ActionListener {
     private Timer kanzTimer2;
     private Timer cloudTimer1;
     private Timer cloudTimer2;
+    private Timer makTimer1;
+    private Timer makTimer2;
     private T_Rex tRex1;
     private T_Rex tRex2;
     private List<Obstacle> obstacles1;
@@ -22,6 +24,8 @@ class MPanel extends JPanel implements ActionListener {
     private List<Cloud> clouds2;
     private List<Kanz> kanzs1;
     private List<Kanz> kanzs2;
+    private List<Mak> maks1;
+    private List<Mak> maks2;
     private Road road1;
     private Road road2;
     private boolean gameOver;
@@ -38,6 +42,7 @@ class MPanel extends JPanel implements ActionListener {
     private BufferedImage obstacleImage;
     private BufferedImage cloudImage;
     private BufferedImage kanzImage;
+    private BufferedImage makImage;
     private boolean darkMode = false;
 
     public MPanel() {
@@ -53,6 +58,8 @@ class MPanel extends JPanel implements ActionListener {
 
         clouds1 = new ArrayList<>();
         clouds2 = new ArrayList<>();
+        maks1 = new ArrayList<>();
+        maks2 = new ArrayList<>();
         kanzs1 = new ArrayList<>();
         kanzs2 = new ArrayList<>();
         gameOver = false;
@@ -103,8 +110,8 @@ class MPanel extends JPanel implements ActionListener {
             tRex2.update();
             road1.update();
             road2.update();
-            updateObstaclesAndClouds(obstacles1, clouds1, kanzs1,tRex1, lives1, score1, scoreSoundPlayed1);
-            updateObstaclesAndClouds(obstacles2, clouds2,kanzs2, tRex2, lives2, score2, scoreSoundPlayed2);
+            updateObstaclesAndClouds(obstacles1, clouds1, kanzs1,maks1,tRex1, lives1, score1, scoreSoundPlayed1);
+            updateObstaclesAndClouds(obstacles2, clouds2,kanzs2, maks2,tRex2, lives2, score2, scoreSoundPlayed2);
 
             if (displayedScore1 < score1) {
                 displayedScore1 += Math.min(5, score1 - displayedScore1);
@@ -122,7 +129,7 @@ class MPanel extends JPanel implements ActionListener {
         }
     }
 
-    private void updateObstaclesAndClouds(List<Obstacle> obstacles, List<Cloud> clouds, List<Kanz> kanzs,T_Rex tRex, int lives, int score, boolean scoreSoundPlayed) {
+    private void updateObstaclesAndClouds(List<Obstacle> obstacles, List<Cloud> clouds, List<Kanz> kanzs,List<Mak> maks,T_Rex tRex, int lives, int score, boolean scoreSoundPlayed) {
         for (Obstacle obstacle : obstacles) {
             obstacle.update();
             if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon())) {
@@ -139,9 +146,15 @@ class MPanel extends JPanel implements ActionListener {
         for (Kanz kanz : kanzs) {
             kanz.update();
         }
+        for (Mak mak : maks) {
+            mak.update();
+        }
+
         obstacles.removeIf(obstacle -> obstacle.getX() < 0);
         clouds.removeIf(cloud -> cloud.getX() < 0);
         clouds.removeIf(kanz -> kanz.getX() < 0);
+        clouds.removeIf(mak -> mak.getX() < 0);
+
 
         if (score % 100 == 0 && score != 0 && !scoreSoundPlayed) {
             SoundPlayer.playSound("Assets/sounds/score.wav");
@@ -154,11 +167,11 @@ class MPanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawGame(g, road1, tRex1, obstacles1, clouds1,kanzs1, displayedScore1, 0, getHeight() / 2);
-        drawGame(g, road2, tRex2, obstacles2, clouds2, kanzs2,displayedScore2, getHeight() / 2, getHeight());
+        drawGame(g, road1, tRex1, obstacles1, clouds1,kanzs1,maks1 ,displayedScore1, 0, getHeight() / 2);
+        drawGame(g, road2, tRex2, obstacles2, clouds2, kanzs2,maks2,displayedScore2, getHeight() / 2, getHeight());
     }
 
-    private void drawGame(Graphics g, Road road, T_Rex tRex, List<Obstacle> obstacles, List<Cloud> clouds,List<Kanz> kanzs ,int score, int yStart, int yEnd) {
+    private void drawGame(Graphics g, Road road, T_Rex tRex, List<Obstacle> obstacles, List<Cloud> clouds,List<Kanz> kanzs ,List<Mak> maks,int score, int yStart, int yEnd) {
         g.setClip(0, yStart, getWidth(), yEnd - yStart);
         if (road != null) {
             road.draw(g);
@@ -169,6 +182,10 @@ class MPanel extends JPanel implements ActionListener {
         for (Kanz kanz : kanzs) {
             kanz.draw(g);
         }
+        for (Mak mak : maks) {
+            mak.draw(g);
+        }
+
         if (tRex != null) {
             tRex.draw(g);
         }
@@ -193,6 +210,8 @@ class MPanel extends JPanel implements ActionListener {
         scheduleNextObstacle(obstacles2);
         scheduleNextCloud(clouds1);
         scheduleNextCloud(clouds2);
+        scheduleNextMak(maks1);
+        scheduleNextMak(maks2);
         scheduleNextKanz(kanzs1);
         scheduleNextKanz(kanzs2);
 
@@ -222,6 +241,17 @@ class MPanel extends JPanel implements ActionListener {
         cloudTimer.setRepeats(false);
         cloudTimer.start();
     }
+    private void scheduleNextMak(List<Mak> maks) {
+        int delay = 5000 + random.nextInt(5000);
+        Timer makTimer = new Timer(delay, e -> {
+            if (!gameOver && !paused) {
+                maks.add(new Mak(getWidth(), random.nextInt(getHeight() / 2), makImage));
+                scheduleNextMak(maks);
+            }
+        });
+        makTimer.setRepeats(false);
+        makTimer.start();
+    }
     private void scheduleNextKanz(List<Kanz> kanzs) {
         int delay = 5000 + random.nextInt(5000);
         Timer kanzTimer = new Timer(delay, e -> {
@@ -245,6 +275,8 @@ class MPanel extends JPanel implements ActionListener {
         obstacles2.clear();
         clouds1.clear();
         clouds2.clear();
+        maks1.clear();
+        maks2.clear();
         kanzs1.clear();
         kanzs2.clear();
 
@@ -280,6 +312,8 @@ class MPanel extends JPanel implements ActionListener {
             scheduleNextObstacle(obstacles2);
             scheduleNextCloud(clouds1);
             scheduleNextCloud(clouds2);
+            scheduleNextMak(maks1);
+            scheduleNextMak(maks2);
             scheduleNextKanz(kanzs2);
             scheduleNextKanz(kanzs1);
 

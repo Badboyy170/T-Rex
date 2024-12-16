@@ -1,27 +1,28 @@
 
+
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class Kanz{
+class Mak {
     private int x, y;
-    private BufferedImage kanzImage;
+    private BufferedImage makImage;
 
-    public Kanz(int startX, int startY, BufferedImage kanzImage) {
+    public Mak(int startX, int startY, BufferedImage makImage) {
         this.x = startX;
         this.y = startY;
-        this.kanzImage = kanzImage;
+        this.makImage = makImage;
     }
 
-    public Kanz(int width, int startY) {
+    public Mak(int width, int startY) {
     }
 
     public void update() {
         x -= 5;
-
     }
 
     public void draw(Graphics g) {
-        g.drawImage(kanzImage, x, y, null);
+        g.drawImage(makImage, x, y, null);
     }
 
     public int getX() {
