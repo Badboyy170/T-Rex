@@ -61,7 +61,7 @@ class GamePanel extends JPanel implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             tRex = new T_Rex(getHeight());
             road = new Road(0, getHeight() - 100, getWidth()); // Initialize the road
-            counter = new Counter();
+            counter = new Counter(getWidth(),getHeight());
 
             int scaledWidth = restartIcon.getIconWidth();
             int scaledHeight = restartIcon.getIconHeight();

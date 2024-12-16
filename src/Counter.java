@@ -10,11 +10,17 @@ public class Counter {
     private BufferedImage HI_img;
     private int score = 0;
     private int highScore = 0;
+    private int xScoreNow, xScoreHeight, xHI, y;
 
-    int animationFrame = 0;
-    int posstion_nums = 0;
+    Counter(int panelWidth, int panelHeight){
 
-    Counter(){
+        xScoreNow = panelWidth - 250;
+        xScoreHeight = panelWidth - 500;
+        xHI = panelWidth - 600;
+
+        y = 25;
+
+
 
         // Load images
         numbers = new BufferedImage[10];
@@ -62,15 +68,15 @@ public class Counter {
         String scoreStr = String.valueOf(score);
         for (int i = 0; i < scoreStr.length(); i++) {
             int digit = Character.getNumericValue(scoreStr.charAt(i));
-            g.drawImage(numbers[digit], 1250 + (i * 50), 25, null);
+            g.drawImage(numbers[digit], xScoreNow + (i * 50), y, null);
         }
 
         // رسم صورة "HI" وسجل أعلى النقاط
-        g.drawImage(HI_img, 920, 20, null);
+        g.drawImage(HI_img, 920, y - 3, null);
         String highScoreStr = String.valueOf(highScore);
         for (int i = 0; i < highScoreStr.length(); i++) {
             int digit = Character.getNumericValue(highScoreStr.charAt(i));
-            g.drawImage(numbers[digit], 1000 + (i * 50), 25, null);
+            g.drawImage(numbers[digit], xScoreHeight + (i * 50), y, null);
         }
     }
     public void resetScore() {
