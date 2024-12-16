@@ -44,6 +44,7 @@ class MPanel extends JPanel implements ActionListener {
     private BufferedImage kanzImage;
     private BufferedImage makImage;
     private boolean darkMode = false;
+    private int cameraY = 0;
 
     public MPanel() {
         init();
@@ -187,7 +188,7 @@ class MPanel extends JPanel implements ActionListener {
         }
 
         if (tRex != null) {
-            tRex.draw(g);
+            tRex.draw(g,cameraY);
         }
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(g);

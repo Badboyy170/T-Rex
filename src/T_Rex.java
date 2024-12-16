@@ -107,18 +107,17 @@ class T_Rex {
         }
     }
 
-    public void draw(Graphics g) {
-        if (debug) {
-            Polygon polygon = getPolygon();
-            g.setColor(Color.RED);
-            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
-        }
+    public void draw(Graphics g, int cameraY) {
+        int distance = Math.max(0, Math.min(y - cameraY, 1000)); // Clamp distance between 0 and 1000
+        double scale = 1.0 / (1 + distance * 0.001); // Adjust the scaling factor as needed
+        int scaledWidth = (int) (width * scale);
+        int scaledHeight = (int) (height * scale);
         if (jumping) {
-            g.drawImage(jumpingImage, x, y, null);
+            g.drawImage(jumpingImage, x, y, scaledWidth, scaledHeight, null);
         } else if (ducking) {
-            g.drawImage(duckingImages[animationFrame % duckingImages.length], x, y, null);
+            g.drawImage(duckingImages[animationFrame % duckingImages.length], x, y, scaledWidth, scaledHeight, null);
         } else {
-            g.drawImage(runningImages[animationFrame % runningImages.length], x, y, null);
+            g.drawImage(runningImages[animationFrame % runningImages.length], x, y, scaledWidth, scaledHeight, null);
         }
     }
     /*
