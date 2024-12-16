@@ -17,6 +17,7 @@ class Kanz{
 
     public void update() {
         x -= 5; // Move the cloud to the left
+
     }
 
     public void draw(Graphics g) {
