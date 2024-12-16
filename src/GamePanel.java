@@ -72,7 +72,7 @@ class GamePanel extends JPanel implements ActionListener {
 
             int scaledWidth = restartIcon.getIconWidth();
             int scaledHeight = restartIcon.getIconHeight();
-            restartIconBounds = new Rectangle(getWidth() / 2 - scaledWidth / 2, getHeight() / 2 + 50, scaledWidth, scaledHeight);
+            restartIconBounds = new Rectangle((int) (getWidth() / 2.8), getHeight() / 6, scaledWidth, scaledHeight);
 
             startGame();
         });
