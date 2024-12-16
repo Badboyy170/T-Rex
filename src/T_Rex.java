@@ -9,8 +9,11 @@ class T_Rex {
     private int x, y, width, height;
     private double yVelocity;
     private boolean jumping;
+    private boolean ducking;
     private BufferedImage[] runningImages;
     private BufferedImage jumpingImage;
+    private BufferedImage[] duckingImages;
+    private boolean debug;
     private int animationFrame;
     private int groundY;
     private int animationCounter; // Add a counter for animation speed control
@@ -26,9 +29,11 @@ class T_Rex {
         animationCounter = 0; // Initialize the counter
         groundY = panelHeight - height;
         y = groundY;
+        debug = true; // Initialize the debug variable
 
         // Load images
         runningImages = new BufferedImage[6];
+        duckingImages = new BufferedImage[2];
         try {
             for (int i = 0; i < 6; i++) {
                 BufferedImage originalImage = ImageIO.read(new File("Assets/raptor-run/raptor-run" + (i + 1) + ".png"));
@@ -36,6 +41,11 @@ class T_Rex {
             }
             BufferedImage originalJumpingImage = ImageIO.read(new File("Assets/raptor-jump/raptor-jump.png"));
             jumpingImage = resizeImage(originalJumpingImage, width, height);
+
+            for (int i = 0; i < 2; i++) {
+                BufferedImage originalDuckingImage = ImageIO.read(new File("Assets/raptor-ready-pounce/raptor-ready-pounce" + (i + 1) + ".png"));
+                duckingImages[i] = resizeImage(originalDuckingImage, width, height / 2); // Adjust height for ducking
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,11 +67,20 @@ class T_Rex {
             SoundPlayer.playSound("Assets/sounds/SFX_Jump.wav"); // Play jump sound
         }
     }
-
     public void duck() {
-        // Implement ducking functionality
-        height = 160; // Reduce the height to simulate ducking
-        y = groundY + (320 - height); // Adjust the y position accordingly
+        if (!jumping) {
+            ducking = true;
+            height /= 2; // Reduce height to half when ducking
+            y = groundY + height; // Adjust y position
+        }
+    }
+
+    public void standUp() {
+        if (ducking) {
+            ducking = false;
+            y = groundY; // Reset y position
+            height *= 2; // Reset height
+        }
     }
 
     public void update() {
@@ -72,33 +91,52 @@ class T_Rex {
             yVelocity = 0;
             jumping = false;
         }
-        if (!jumping) {
+        if (!jumping && !ducking) {
             animationCounter++;
             if (animationCounter >= ANIMATION_SPEED) {
                 animationFrame = (animationFrame + 1) % runningImages.length;
                 animationCounter = 0; // Reset the counter
             }
         }
-    }
-
-    public void draw(Graphics g) {
-        if (jumping) {
-            g.drawImage(jumpingImage, x, y, null);
-        } else {
-            g.drawImage(runningImages[animationFrame], x, y, null);
+        if (ducking) {
+            animationCounter++;
+            if (animationCounter >= ANIMATION_SPEED) {
+                animationFrame = (animationFrame + 1) % duckingImages.length;
+                animationCounter = 0; // Reset the counter
+            }
         }
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(x , y , width + 2 , height + 2 );
+    public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
+        if (jumping) {
+            g.drawImage(jumpingImage, x, y, null);
+        } else if (ducking) {
+            g.drawImage(duckingImages[animationFrame % duckingImages.length], x, y, null);
+        } else {
+            g.drawImage(runningImages[animationFrame % runningImages.length], x, y, null);
+        }
     }
-
+    /*
+    Top left: (x, y)
+    Top right: (x + width, y)
+    Bottom right: (x + width, y + height)
+    Bottom left: (x, y + height)
+     */
     public Polygon getPolygon() {
-        return new Polygon(Arrays.asList(
-                new Point(x, y),
-                new Point(x + width, y),
-                new Point(x + width, y + height),
-                new Point(x, y + height)
-        ));
+        int[] xPoints;
+        int[] yPoints;
+        if (jumping) {
+            xPoints = new int[]{x + 380, x + width - 220, x + width - 300, x + 240};
+            yPoints = new int[]{y + 60, y + 60, y + height - 80, y + height - 50};
+        } else {
+            xPoints = new int[]{x + 130, x + width - 195, x + width - 195, x + 130};
+            yPoints = new int[]{y + 220, y + 220, y + height, y + height};
+        }
+        return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

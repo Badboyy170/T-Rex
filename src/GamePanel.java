@@ -48,6 +48,11 @@ class GamePanel extends JPanel implements ActionListener {
     private boolean darkMode = false;
     private Counter counter;
 
+    private boolean speedPotionActive = false;
+    private boolean invisibilityPotionActive = false;
+    private Timer speedPotionTimer;
+    private Timer invisibilityPotionTimer;
+
 
 
     public GamePanel(String difficulty) {
@@ -104,12 +109,12 @@ class GamePanel extends JPanel implements ActionListener {
                 if (CollisionDetection.isColliding(tRex.getPolygon(), birdObstacle.getPolygon())) {
                     lives--;
                     if (lives >= 1) {
-                        SoundPlayer.playSound("Assets/sounds/life_lost.wav"); // Play life lost sound
+                        SoundPlayer.playSound("Assets/sounds/life_lost.wav");
                     }
                     if (lives <= 0) {
                         gameOver = true;
                         gameTimer.stop();
-                        SoundPlayer.playSound("Assets/sounds/death.wav"); // Play death sound
+                        SoundPlayer.playSound("Assets/sounds/death.wav");
                     } else {
                         birdObstacles.clear();
                         clouds.clear();
@@ -140,11 +145,8 @@ class GamePanel extends JPanel implements ActionListener {
 
             // Switch to dark mode when score reaches 1500
             if (counter.getScore() >= 3000 && !darkMode) {
-                switchToDarkMode();
                 darkMode = true;
-            }else{
-                switchToWhiteMode();
-                darkMode = false;
+                switchToDarkMode();
             }
 
             repaint();
@@ -158,7 +160,7 @@ class GamePanel extends JPanel implements ActionListener {
     }
 
     private void init() {
-        switchToWhiteMode();
+        setBackground(Color.decode("#f8f8f8"));
         setLayout(new BorderLayout());
         obstacles = new ArrayList<>();
         clouds = new ArrayList<>();
@@ -181,8 +183,17 @@ class GamePanel extends JPanel implements ActionListener {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     tRex.jump();
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    tRex.duck();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     togglePause();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    tRex.standUp();
                 }
             }
         });
@@ -360,16 +371,27 @@ class GamePanel extends JPanel implements ActionListener {
 
     private void switchToDarkMode() {
         setBackground(Color.decode("#2c2c2c")); // Dark background color
-        // Update other UI elements to dark mode if needed
-        // For example, change text color, button colors, etc.
-        //add dark mode sound effect (later)
     }
 
-    private void switchToWhiteMode() {
-        setBackground(Color.decode("#f8f8f8"));
-        // Update other UI elements to dark mode if needed
-        // For example, change text color, button colors, etc.
-        //add dark mode sound effect (later)
+    private void activateSpeedPotion() {
+        if (speedPotionTimer != null) {
+            speedPotionTimer.stop();
+        }
+        speedPotionActive = true;
+        gameTimer.setDelay(30); // Reset game speed to normal
+        speedPotionTimer = new Timer(60000, e -> speedPotionActive = false); // 1 minute
+        speedPotionTimer.setRepeats(false);
+        speedPotionTimer.start();
+    }
+
+    private void activateInvisibilityPotion() {
+        if (invisibilityPotionTimer != null) {
+            invisibilityPotionTimer.stop();
+        }
+        invisibilityPotionActive = true;
+        invisibilityPotionTimer = new Timer(45000, e -> invisibilityPotionActive = false); // 45 seconds
+        invisibilityPotionTimer.setRepeats(false);
+        invisibilityPotionTimer.start();
     }
 
     private void scheduleNextbirdObstacle() {

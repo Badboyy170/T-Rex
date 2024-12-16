@@ -7,6 +7,6 @@ public class Projection {
     }
 
     public boolean overlaps(Projection other) {
-        return !((this.max/10000) -3.35  < (other.min/10000) || (other.max/10000) - 3.35   < (this.min/10000));
+        return !((this.max/10000) < (other.min/10000) || (other.max/10000) < (this.min/10000));
     }
 }

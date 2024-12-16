@@ -1,9 +1,10 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
+
 class Obstacle {
     private int x, y, width, height;
     private BufferedImage obstacleImage;
+    private boolean debug;
 
     public Obstacle(int startX, int panelHeight, BufferedImage obstacleImage) {
         this.x = startX;
@@ -11,6 +12,7 @@ class Obstacle {
         this.height = 200;
         this.y = panelHeight - height; // Adjust y based on panel height
         this.obstacleImage = resizeImage(obstacleImage, width, height);
+        this.debug = true; // Initialize the debug variable
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -27,6 +29,11 @@ class Obstacle {
     }
 
     public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
         g.drawImage(obstacleImage, x, y, null);
     }
 
@@ -35,16 +42,12 @@ class Obstacle {
     }
 
     public Rectangle getBounds() {
-//        int margin = -82; // Adjust this value to make the collision detection more sensitive
-        return new Rectangle(x , y , width + 2 , height + 2 );
+        return new Rectangle(x, y, width + 2, height + 2);
     }
 
     public Polygon getPolygon() {
-        return new Polygon(Arrays.asList(
-                new Point(x, y),
-                new Point(x + width, y),
-                new Point(x + width, y + height),
-                new Point(x, y + height)
-        ));
+        int[] xPoints = {x - 10, x + width + 10, x + width + 10, x - 10};
+        int[] yPoints = {y + 20, y + 20, y + height - 20, y + height - 20};
+        return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

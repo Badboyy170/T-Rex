@@ -1,42 +1,56 @@
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Polygon {
-    private List<Vector2D> vertices; // قائمة بالنقاط التي تمثل رؤوس المضلع
+    private List<Vector2D> vertices;
+    private int[] xPoints;
+    private int[] yPoints;
+    private int nPoints;
 
-    // المُنشئ: يقوم بإنشاء مضلع جديد باستخدام قائمة من النقاط
-    public Polygon(List<Point> points) {
-        vertices = new ArrayList<>(); // تهيئة قائمة الرؤوس
-        for (Point p : points) {
-            vertices.add(new Vector2D(p.x, p.y)); // تحويل كل نقطة إلى كائن Vector2D وإضافته إلى القائمة
+    public Polygon(int[] xPoints, int[] yPoints, int nPoints) {
+        this.xPoints = xPoints;
+        this.yPoints = yPoints;
+        this.nPoints = nPoints;
+        vertices = new ArrayList<>();
+        for (int i = 0; i < nPoints; i++) {
+            vertices.add(new Vector2D(xPoints[i], yPoints[i]));
         }
     }
 
-    // وظيفة للحصول على جميع المحاور العمودية على حواف المضلع (تُستخدم في كشف التصادم)
+    public int[] getXPoints() {
+        return xPoints;
+    }
+
+    public int[] getYPoints() {
+        return yPoints;
+    }
+
+    public int getNPoints() {
+        return nPoints;
+    }
+
     public List<Vector2D> getAxes() {
-        List<Vector2D> axes = new ArrayList<>(); // قائمة لتخزين المحاور
+        List<Vector2D> axes = new ArrayList<>();
         for (int i = 0; i < vertices.size(); i++) {
-            Vector2D p1 = vertices.get(i); // الرأس الحالي
-            Vector2D p2 = vertices.get((i + 1) % vertices.size()); // الرأس التالي (يتم استخدام الباقي للتكرار الدائري)
-            Vector2D edge = p1.subtract(p2); // حساب الحافة بين الرأسين
-            axes.add(edge.perpendicular()); // إضافة المحور العمودي على الحافة إلى القائمة
+            Vector2D p1 = vertices.get(i);
+            Vector2D p2 = vertices.get((i + 1) % vertices.size());
+            Vector2D edge = p1.subtract(p2);
+            axes.add(edge.perpendicular());
         }
-        return axes; // إعادة قائمة المحاور
+        return axes;
     }
 
-    // وظيفة لإسقاط المضلع على محور معين وحساب الإسقاط (لأغراض كشف التصادم)
     public Projection project(Vector2D axis) {
-        double min = axis.dot(vertices.get(0)); // أول إسقاط يُعتبر القيمة الدنيا
-        double max = min; // أول إسقاط يُعتبر أيضًا القيمة العظمى
+        double min = axis.dot(vertices.get(0));
+        double max = min;
         for (int i = 1; i < vertices.size(); i++) {
-            double projection = axis.dot(vertices.get(i)); // حساب الإسقاط للنقطة الحالية
+            double projection = axis.dot(vertices.get(i));
             if (projection < min) {
-                min = projection; // تحديث القيمة الدنيا إذا كانت الإسقاط أقل
+                min = projection;
             } else if (projection > max) {
-                max = projection; // تحديث القيمة العظمى إذا كانت الإسقاط أكبر
+                max = projection;
             }
         }
-        return new Projection(min, max); // إعادة الكائن الذي يمثل الإسقاط
+        return new Projection(min, max);
     }
 }

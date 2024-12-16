@@ -15,7 +15,7 @@ class birdObstacle {
         this.x = startX;
         this.width = 150;
         this.height = 120;
-        this.y = panelHeight - height; // Adjust y based on panel height
+        this.y = panelHeight - height ; // Adjust y to be 50 pixels higher
         flyingImages = new BufferedImage[6];
         try {
             for (int i = 0; i < 6; i++) {
@@ -54,11 +54,8 @@ class birdObstacle {
     }
 
     public Polygon getPolygon() {
-        return new Polygon(Arrays.asList(
-                new Point(x, y),
-                new Point(x + width, y),
-                new Point(x + width, y + height),
-                new Point(x, y + height)
-        ));
+        int[] xPoints = {x + 20, x + width - 20, x + width - 20, x + 20};
+        int[] yPoints = {y + 20, y + 20, y + height - 20, y + height - 20};
+        return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }
