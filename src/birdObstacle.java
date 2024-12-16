@@ -1,16 +1,30 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 class birdObstacle {
     private int x, y, width, height;
-    private BufferedImage obstacleImage;
+    private BufferedImage[] flyingImages;
+    private int animationFrame;
+    private int animationCounter; // Add a counter for animation speed control
+    private static final int ANIMATION_SPEED = 5;
 
-    public birdObstacle(int startX, int panelHeight, BufferedImage obstacleImage) {
+    public birdObstacle(int startX, int panelHeight) {
         this.x = startX;
-        this.width = 170;
-        this.height = 200;
+        this.width = 150;
+        this.height = 120;
         this.y = panelHeight - height; // Adjust y based on panel height
-        this.obstacleImage = resizeImage(obstacleImage, width, height);
+        flyingImages = new BufferedImage[6];
+        try {
+            for (int i = 0; i < 6; i++) {
+                BufferedImage originalImage = ImageIO.read(new File("Assets/bird/" + (i + 1) + ".png"));
+                flyingImages[i] = resizeImage(originalImage, width, height);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -23,20 +37,20 @@ class birdObstacle {
     }
 
     public void update() {
-        x -= 10; // Move the obstacle to the left
+        x -= 20;
+        animationCounter++;
+        if (animationCounter >= ANIMATION_SPEED) {
+            animationFrame = (animationFrame + 1) % flyingImages.length;
+            animationCounter = 0; // Reset the counter
+        }
     }
 
     public void draw(Graphics g) {
-        g.drawImage(obstacleImage, x, y, null);
+        g.drawImage(flyingImages[animationFrame], x, y, null);
     }
 
     public int getX() {
         return x;
-    }
-
-    public Rectangle getBounds() {
-//        int margin = -82; // Adjust this value to make the collision detection more sensitive
-        return new Rectangle(x , y , width + 2 , height + 2 );
     }
 
     public Polygon getPolygon() {

@@ -20,7 +20,6 @@ class GamePanel extends JPanel implements ActionListener {
     private List<birdObstacle> birdObstacles;
     private Timer birdObstacleTimer;
 
-    private BufferedImage birdObstacleImage;
     private Road road;
     private boolean gameOver;
     private boolean paused;
@@ -269,7 +268,6 @@ class GamePanel extends JPanel implements ActionListener {
         // Load obstacle and cloud images once
         try {
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
-            birdObstacleImage = ImageIO.read(new File("Assets/bird/1.png"));
 
             BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
             BufferedImage originalKanzImage = ImageIO.read(new File("Assets/monster.png"));
@@ -378,10 +376,10 @@ class GamePanel extends JPanel implements ActionListener {
         if (birdObstacleTimer != null) {
             birdObstacleTimer.stop();
         }//[5-10]
-        int delay = difficulty.equals("easy") ? 3000 + random.nextInt(3000) : 1000 + random.nextInt(1000);
+        int delay = difficulty.equals("easy") ? 10000 + random.nextInt(10000) : 5000 + random.nextInt(4000);
         birdObstacleTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                birdObstacles.add(new birdObstacle(getWidth(), getHeight(), birdObstacleImage));
+                birdObstacles.add(new birdObstacle(getWidth(), getHeight()));
                 scheduleNextbirdObstacle(); // Schedule the next bird obstacle
             }
         });
