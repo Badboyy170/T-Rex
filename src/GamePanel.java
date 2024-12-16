@@ -87,6 +87,7 @@ class GamePanel extends JPanel implements ActionListener {
                         clouds.clear();
                         tRex = new T_Rex(getHeight());
                     }
+                    counter.resetScore();
                     break;
                 }
             }
@@ -115,9 +116,12 @@ class GamePanel extends JPanel implements ActionListener {
             }
 
             // Switch to dark mode when score reaches 1500
-            if (counter.getScore() >= 5000 && !darkMode) {
+            if (counter.getScore() >= 3000 && !darkMode) {
                 switchToDarkMode();
                 darkMode = true;
+            }else{
+                switchToWhiteMode();
+                darkMode = false;
             }
 
             repaint();
@@ -131,7 +135,7 @@ class GamePanel extends JPanel implements ActionListener {
     }
 
     private void init() {
-        setBackground(Color.decode("#f8f8f8"));
+        switchToWhiteMode();
         setLayout(new BorderLayout());
         obstacles = new ArrayList<>();
         clouds = new ArrayList<>();
@@ -214,9 +218,9 @@ class GamePanel extends JPanel implements ActionListener {
         hideButtons();
 
         // Load the restart icon
-        Image originalImage = new ImageIcon("Assets/restart.png").getImage();
-        int scaledWidth = originalImage.getWidth(null) / 2;
-        int scaledHeight = originalImage.getHeight(null) / 2;
+        Image originalImage = new ImageIcon("Assets/Game-Over.png").getImage();
+        int scaledWidth = originalImage.getWidth(null);
+        int scaledHeight = originalImage.getHeight(null) ;
         Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
         restartIcon = new ImageIcon(scaledImage);
         // Add mouse listener for restart icon
@@ -225,6 +229,7 @@ class GamePanel extends JPanel implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 if (gameOver && restartIconBounds.contains(e.getPoint())) {
                     restartGame();
+                    counter.resetScore();
                 }
             }
         });
@@ -284,16 +289,24 @@ class GamePanel extends JPanel implements ActionListener {
 
         // In the display method
         if (gameOver) {
-            g.setColor(Color.RED);
-            g.setFont(new Font("Arial", Font.BOLD, 36));
-            g.drawString("Game Over", getWidth() / 2 - 100, getHeight() / 2);
-            restartIcon.paintIcon(this, g, restartIconBounds.x, restartIconBounds.y);
+
+            restartIcon.paintIcon(this, g, (int) (getWidth() / 2.8), getHeight() / 6);
+        }else{
+//            if(counter.getScore() > 500){
+//               gameTimer.setDelay(gameTimer.getDelay()-2);
+//            }
+//            g.setColor(Color.RED);
+//            g.setFont(new Font("Arial", Font.BOLD, 36));
+//            g.drawString(String.valueOf(gameTimer.getDelay()), getWidth() / 2 - 100, getHeight() / 2);
+            counter.draw(g);
+
         }
-        counter.draw(g);
+
     }
 
+
     public void startGame() {
-        int gameSpeed = difficulty.equals("easy") ? 30 : 15;
+        int gameSpeed = difficulty.equals("easy") ? 30 : 20;
         gameTimer = new Timer(gameSpeed, this);
         gameTimer.start();
         scheduleNextObstacle();
@@ -304,6 +317,13 @@ class GamePanel extends JPanel implements ActionListener {
 
     private void switchToDarkMode() {
         setBackground(Color.decode("#2c2c2c")); // Dark background color
+        // Update other UI elements to dark mode if needed
+        // For example, change text color, button colors, etc.
+        //add dark mode sound effect (later)
+    }
+
+    private void switchToWhiteMode() {
+        setBackground(Color.decode("#f8f8f8"));
         // Update other UI elements to dark mode if needed
         // For example, change text color, button colors, etc.
         //add dark mode sound effect (later)
@@ -380,6 +400,7 @@ class GamePanel extends JPanel implements ActionListener {
         obstacles.clear();
         clouds.clear();
         kanzs.clear();
+        counter.resetScore();
 
         tRex = new T_Rex(getHeight());
         road = new Road(0, getHeight() - 100, getWidth()); // Reinitialize the road
