@@ -15,6 +15,8 @@ class GamePanel extends JPanel implements ActionListener {
     private List<Obstacle> obstacles;
     private Timer obstacleTimer;
     private List<Cloud> clouds;
+    private List<Kanz> kanzs;
+
     private Road road;
     private boolean gameOver;
     private boolean paused;
@@ -33,7 +35,9 @@ class GamePanel extends JPanel implements ActionListener {
     private boolean scoreSoundPlayed;
     private BufferedImage obstacleImage;
     private BufferedImage cloudImage;
+    private BufferedImage kanzImage;
     private Timer cloudTimer;
+    private Timer kanzTimer;
     private boolean darkMode = false;
     private Counter counter;
 
@@ -86,11 +90,16 @@ class GamePanel extends JPanel implements ActionListener {
                     break;
                 }
             }
+            //   for (Kanz kanz : kanzs {
+            //   kanz.update();
+            //}
+
             for (Cloud cloud : clouds) {
                 cloud.update();
             }
             obstacles.removeIf(obstacle -> obstacle.getX() < 0);
             clouds.removeIf(cloud -> cloud.getX() < 0);
+            kanzs.removeIf(kanz -> kanz.getX() < 0);
 
 //            // Smooth score animation
 //            if (displayedScore < score) {
@@ -126,6 +135,7 @@ class GamePanel extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         obstacles = new ArrayList<>();
         clouds = new ArrayList<>();
+        kanzs = new ArrayList<>();
         gameOver = false;
         paused = false;
         random = new Random();
@@ -229,11 +239,17 @@ class GamePanel extends JPanel implements ActionListener {
         try {
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
             BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
+            BufferedImage originalKanzImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
+            int kanzWidth = originalKanzImage.getWidth() / 2; // Adjust the scale factor as needed
+            int kanzHeight = originalKanzImage.getHeight() / 2; // Adjust the scale factor as needed
             int cloudWidth = originalCloudImage.getWidth() / 2; // Adjust the scale factor as needed
             int cloudHeight = originalCloudImage.getHeight() / 2; // Adjust the scale factor as needed
             cloudImage = new BufferedImage(cloudWidth, cloudHeight, BufferedImage.TYPE_INT_ARGB);
+            kanzImage = new BufferedImage(kanzWidth, kanzHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g3d = kanzImage.createGraphics();
             Graphics2D g2d = cloudImage.createGraphics();
             g2d.drawImage(originalCloudImage.getScaledInstance(cloudWidth, cloudHeight, Image.SCALE_SMOOTH), 0, 0, null);
+            g3d.drawImage(originalKanzImage.getScaledInstance(cloudWidth, cloudHeight, Image.SCALE_SMOOTH), 0, 0, null);
             g2d.dispose();
         } catch (IOException e) {
             e.printStackTrace();
@@ -246,6 +262,9 @@ class GamePanel extends JPanel implements ActionListener {
         }
         for (Cloud cloud : clouds) {
             cloud.draw(g);
+        }
+        for (Kanz kanz : kanzs) {
+            kanz.draw(g);
         }
         if (tRex != null) {
             tRex.draw(g);
@@ -279,6 +298,7 @@ class GamePanel extends JPanel implements ActionListener {
         gameTimer.start();
         scheduleNextObstacle();
         scheduleNextCloud();
+        scheduleNextKanz();
         startScoreTimer();
     }
 
@@ -303,6 +323,24 @@ class GamePanel extends JPanel implements ActionListener {
         obstacleTimer.setRepeats(false);
         obstacleTimer.start();
     }
+
+
+    private void scheduleNextKanz() {
+        if (kanzTimer != null) {
+            kanzTimer.stop();
+        }
+        int delay = 5000 + random.nextInt(5000); // Increase the delay for cloud respawning
+        kanzTimer = new Timer(delay, e -> {
+            if (!gameOver && !paused) {
+                clouds.add(new Cloud(getWidth(), random.nextInt(getHeight() / 2), kanzImage));
+                scheduleNextCloud(); // Schedule the next cloud
+            }
+        });
+        kanzTimer.setRepeats(false);
+        kanzTimer.start();
+    }
+
+
 
     private void scheduleNextCloud() {
         if (cloudTimer != null) {
@@ -341,6 +379,8 @@ class GamePanel extends JPanel implements ActionListener {
         paused = false;
         obstacles.clear();
         clouds.clear();
+        kanzs.clear();
+
         tRex = new T_Rex(getHeight());
         road = new Road(0, getHeight() - 100, getWidth()); // Reinitialize the road
 

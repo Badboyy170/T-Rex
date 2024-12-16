@@ -10,6 +10,8 @@ class MPanel extends JPanel implements ActionListener {
     private Timer gameTimer;
     private Timer obstacleTimer1;
     private Timer obstacleTimer2;
+    private Timer kanzTimer1;
+    private Timer kanzTimer2;
     private Timer cloudTimer1;
     private Timer cloudTimer2;
     private T_Rex tRex1;
@@ -18,6 +20,8 @@ class MPanel extends JPanel implements ActionListener {
     private List<Obstacle> obstacles2;
     private List<Cloud> clouds1;
     private List<Cloud> clouds2;
+    private List<Kanz> kanzs1;
+    private List<Kanz> kanzs2;
     private Road road1;
     private Road road2;
     private boolean gameOver;
@@ -33,6 +37,7 @@ class MPanel extends JPanel implements ActionListener {
     private boolean scoreSoundPlayed2;
     private BufferedImage obstacleImage;
     private BufferedImage cloudImage;
+    private BufferedImage kanzImage;
     private boolean darkMode = false;
 
     public MPanel() {
@@ -44,8 +49,12 @@ class MPanel extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         obstacles1 = new ArrayList<>();
         obstacles2 = new ArrayList<>();
+
+
         clouds1 = new ArrayList<>();
         clouds2 = new ArrayList<>();
+        kanzs1 = new ArrayList<>();
+        kanzs2 = new ArrayList<>();
         gameOver = false;
         paused = false;
         random = new Random();
@@ -94,8 +103,8 @@ class MPanel extends JPanel implements ActionListener {
             tRex2.update();
             road1.update();
             road2.update();
-            updateObstaclesAndClouds(obstacles1, clouds1, tRex1, lives1, score1, scoreSoundPlayed1);
-            updateObstaclesAndClouds(obstacles2, clouds2, tRex2, lives2, score2, scoreSoundPlayed2);
+            updateObstaclesAndClouds(obstacles1, clouds1, kanzs1,tRex1, lives1, score1, scoreSoundPlayed1);
+            updateObstaclesAndClouds(obstacles2, clouds2,kanzs2, tRex2, lives2, score2, scoreSoundPlayed2);
 
             if (displayedScore1 < score1) {
                 displayedScore1 += Math.min(5, score1 - displayedScore1);
@@ -113,7 +122,7 @@ class MPanel extends JPanel implements ActionListener {
         }
     }
 
-    private void updateObstaclesAndClouds(List<Obstacle> obstacles, List<Cloud> clouds, T_Rex tRex, int lives, int score, boolean scoreSoundPlayed) {
+    private void updateObstaclesAndClouds(List<Obstacle> obstacles, List<Cloud> clouds, List<Kanz> kanzs,T_Rex tRex, int lives, int score, boolean scoreSoundPlayed) {
         for (Obstacle obstacle : obstacles) {
             obstacle.update();
             if (CollisionDetection.isColliding(tRex.getPolygon(), obstacle.getPolygon())) {
@@ -127,8 +136,12 @@ class MPanel extends JPanel implements ActionListener {
         for (Cloud cloud : clouds) {
             cloud.update();
         }
+        for (Kanz kanz : kanzs) {
+            kanz.update();
+        }
         obstacles.removeIf(obstacle -> obstacle.getX() < 0);
         clouds.removeIf(cloud -> cloud.getX() < 0);
+        clouds.removeIf(kanz -> kanz.getX() < 0);
 
         if (score % 100 == 0 && score != 0 && !scoreSoundPlayed) {
             SoundPlayer.playSound("Assets/sounds/score.wav");
@@ -141,17 +154,20 @@ class MPanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawGame(g, road1, tRex1, obstacles1, clouds1, displayedScore1, 0, getHeight() / 2);
-        drawGame(g, road2, tRex2, obstacles2, clouds2, displayedScore2, getHeight() / 2, getHeight());
+        drawGame(g, road1, tRex1, obstacles1, clouds1,kanzs1, displayedScore1, 0, getHeight() / 2);
+        drawGame(g, road2, tRex2, obstacles2, clouds2, kanzs2,displayedScore2, getHeight() / 2, getHeight());
     }
 
-    private void drawGame(Graphics g, Road road, T_Rex tRex, List<Obstacle> obstacles, List<Cloud> clouds, int score, int yStart, int yEnd) {
+    private void drawGame(Graphics g, Road road, T_Rex tRex, List<Obstacle> obstacles, List<Cloud> clouds,List<Kanz> kanzs ,int score, int yStart, int yEnd) {
         g.setClip(0, yStart, getWidth(), yEnd - yStart);
         if (road != null) {
             road.draw(g);
         }
         for (Cloud cloud : clouds) {
             cloud.draw(g);
+        }
+        for (Kanz kanz : kanzs) {
+            kanz.draw(g);
         }
         if (tRex != null) {
             tRex.draw(g);
@@ -177,6 +193,9 @@ class MPanel extends JPanel implements ActionListener {
         scheduleNextObstacle(obstacles2);
         scheduleNextCloud(clouds1);
         scheduleNextCloud(clouds2);
+        scheduleNextKanz(kanzs1);
+        scheduleNextKanz(kanzs2);
+
         startScoreTimer();
     }
 
@@ -203,6 +222,17 @@ class MPanel extends JPanel implements ActionListener {
         cloudTimer.setRepeats(false);
         cloudTimer.start();
     }
+    private void scheduleNextKanz(List<Kanz> kanzs) {
+        int delay = 5000 + random.nextInt(5000);
+        Timer kanzTimer = new Timer(delay, e -> {
+            if (!gameOver && !paused) {
+                kanzs.add(new Kanz(getWidth(), random.nextInt(getHeight() / 2), kanzImage));
+                scheduleNextKanz(kanzs);
+            }
+        });
+        kanzTimer.setRepeats(false);
+        kanzTimer.start();
+    }
 
     private void switchToDarkMode() {
         setBackground(Color.decode("#2c2c2c"));
@@ -215,6 +245,9 @@ class MPanel extends JPanel implements ActionListener {
         obstacles2.clear();
         clouds1.clear();
         clouds2.clear();
+        kanzs1.clear();
+        kanzs2.clear();
+
         tRex1 = new T_Rex(getHeight() / 2);
         tRex2 = new T_Rex(getHeight() / 2);
         road1 = new Road(0, getHeight() / 2 - 100, getWidth());
@@ -247,6 +280,9 @@ class MPanel extends JPanel implements ActionListener {
             scheduleNextObstacle(obstacles2);
             scheduleNextCloud(clouds1);
             scheduleNextCloud(clouds2);
+            scheduleNextKanz(kanzs2);
+            scheduleNextKanz(kanzs1);
+
             startScoreTimer();
         } else {
             paused = true;
