@@ -11,6 +11,7 @@ import java.util.Random;
 
 class GamePanel extends JPanel implements ActionListener {
     private Timer gameTimer;
+
     private T_Rex tRex;
     private List<Obstacle> obstacles;
     private Timer obstacleTimer;
@@ -55,6 +56,7 @@ class GamePanel extends JPanel implements ActionListener {
 
 
 
+
     public GamePanel(String difficulty) {
         this.difficulty = difficulty;
         init();
@@ -82,6 +84,27 @@ class GamePanel extends JPanel implements ActionListener {
             tRex.update();
             road.update(); // Update the road
             counter.updateScore();
+            for (Kanz kanz : kanzs) {
+                kanz.update();
+                if (CollisionDetection.isColliding(tRex.getPolygon(), kanz.getPolygon())) {
+                    lives++;
+
+                }
+
+
+            }
+            for (Mak mak : maks) {
+                mak.update();
+                if (CollisionDetection.isColliding(tRex.getPolygon(), mak.getPolygon())) {
+                    invisibilityPotionActive=true;
+                    maks.clear();
+
+
+                }
+
+
+            }
+
 
             for (Obstacle obstacle : obstacles) {
                 obstacle.update();
@@ -132,7 +155,7 @@ class GamePanel extends JPanel implements ActionListener {
             clouds.removeIf(cloud -> cloud.getX() < 0);
             birdObstacles.removeIf(birdObstacle -> birdObstacle.getX() < 0);
             kanzs.removeIf(kanz -> kanz.getX() < 0);
-            maks.removeIf(kanz -> kanz.getX() < 0);
+            maks.removeIf(mak -> mak.getX() < 0);
 
 
             // Play sound every 100 score gained
@@ -281,7 +304,7 @@ class GamePanel extends JPanel implements ActionListener {
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
 
             BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
-            BufferedImage originalKanzImage = ImageIO.read(new File("Assets/potions/invisiblePotion.png"));
+            BufferedImage originalKanzImage = ImageIO.read(new File("Assets/heart.png"));
             BufferedImage originalMakImage = ImageIO.read(new File("Assets/potions/resetSpeed.png"));
             int makWidth = originalKanzImage.getWidth() / 2; // Adjust the scale factor as needed
             int makHeight = originalKanzImage.getHeight() / 2; // Adjust the scale factor as needed
@@ -432,8 +455,8 @@ class GamePanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         kanzTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                clouds.add(new Cloud(getWidth(), random.nextInt(getHeight() / 2), kanzImage));
-                scheduleNextCloud();
+                kanzs.add(new Kanz(getWidth() , kanzImage));
+                scheduleNextKanz();
             }
         });
         kanzTimer.setRepeats(false);
@@ -463,8 +486,8 @@ class GamePanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         makTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                clouds.add(new Cloud(getWidth(), random.nextInt(getHeight() / 2), makImage));
-                scheduleNextCloud();
+                maks.add(new Mak(getWidth(),  makImage));
+                scheduleNextMak();
             }
         });
         makTimer.setRepeats(false);

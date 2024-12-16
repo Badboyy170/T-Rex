@@ -3,39 +3,39 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 class Kanz{
-    private int x, y;
+    private boolean debug;
+    private int x, y,width,height;
     private BufferedImage kanzImage;
-    int width ,height;
 
-    public Kanz(int startX, int startY, BufferedImage kanzImage) {
+
+    public Kanz(int startX,  BufferedImage kanzImage) {
         this.x = startX;
-        this.y = startY;
+        this.y = 370;
         this.kanzImage = kanzImage;
-        width=5000;
-        height=6000;
-        BufferedImage originalImage=kanzImage;
-        kanzImage=resizeImage(originalImage,width,height);
-        this.kanzImage=kanzImage;
+        this.debug=true;
 
     }
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
-        Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = resizedImage.createGraphics();
-        g2d.drawImage(tmp, 0, 0, null);
-        g2d.dispose();
-        return resizedImage;
-    }
+
 
     public void update() {
         x -= 5;
     }
 
     public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
         g.drawImage(kanzImage, x, y, null);
     }
 
     public int getX() {
         return x;
+    }
+    public Polygon getPolygon() {
+        int[] xPoints = {x  , x + width  , x + width , x };
+        int[] yPoints = {y  , y , y + height , y + height };
+        return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

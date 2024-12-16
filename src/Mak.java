@@ -5,12 +5,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 class Mak {
-    private int x, y;
+    private int x, y ,width,height;
     private BufferedImage makImage;
 
-    public Mak(int startX, int startY, BufferedImage makImage) {
+    public Mak(int startX,  BufferedImage makImage) {
         this.x = startX;
-        this.y = startY;
+        this.y = 370;
         this.makImage = makImage;
     }
 
@@ -27,5 +27,10 @@ class Mak {
 
     public int getX() {
         return x;
+    }
+    public Polygon getPolygon() {
+        int[] xPoints = {x  , x + width  , x + width , x };
+        int[] yPoints = {y  , y , y + height , y + height };
+        return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

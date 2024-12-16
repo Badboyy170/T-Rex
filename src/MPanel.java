@@ -245,7 +245,7 @@ class MPanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         Timer makTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                maks.add(new Mak(getWidth(), random.nextInt(getHeight() / 2), makImage));
+                maks.add(new Mak(getWidth(), makImage));
                 scheduleNextMak(maks);
             }
         });
@@ -256,7 +256,7 @@ class MPanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         Timer kanzTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                kanzs.add(new Kanz(getWidth(), random.nextInt(getHeight() / 2), kanzImage));
+                kanzs.add(new Kanz(getWidth() , kanzImage));
                 scheduleNextKanz(kanzs);
             }
         });
