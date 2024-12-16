@@ -72,7 +72,7 @@ public class Counter {
         }
 
         // رسم صورة "HI" وسجل أعلى النقاط
-        g.drawImage(HI_img, 920, y - 3, null);
+        g.drawImage(HI_img, xHI , y - 3, null);
         String highScoreStr = String.valueOf(highScore);
         for (int i = 0; i < highScoreStr.length(); i++) {
             int digit = Character.getNumericValue(highScoreStr.charAt(i));
