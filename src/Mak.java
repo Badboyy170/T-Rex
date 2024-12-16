@@ -5,16 +5,26 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 class Mak {
-    private int x, y;
+    private int x, y ,width,height;
     private BufferedImage makImage;
+    private boolean debug;
 
-    public Mak(int startX, int startY, BufferedImage makImage) {
+    public Mak(int startX,  BufferedImage makImage) {
         this.x = startX;
-        this.y = startY;
-        this.makImage = makImage;
+        this.y = 370;
+        this.width = 150;
+        this.height = 120;
+        this.debug=true;
+        this.makImage = resizeImage(makImage, width, height);
     }
 
-    public Mak(int width, int startY) {
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        Image tmp = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resizedImage;
     }
 
     public void update() {
@@ -22,10 +32,20 @@ class Mak {
     }
 
     public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
         g.drawImage(makImage, x, y, null);
     }
 
     public int getX() {
         return x;
+    }
+    public Polygon getPolygon() {
+        int[] xPoints = {x+47 , x + width -32 , x + width-27 , x+32 };
+        int[] yPoints = {y +10 , y+10 , y + height-10 , y + height-10 };
+        return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

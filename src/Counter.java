@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Counter {
     private BufferedImage[] numbers;
     private BufferedImage HI_img;
-    private int score = 0;
+    private double score = 0;
     private int highScore = 0;
     private int xScoreNow, xScoreHeight, xHI, y;
 
@@ -41,7 +41,7 @@ public class Counter {
     }
 
     public int getScore() {
-        return score;
+        return (int)score;
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -55,17 +55,17 @@ public class Counter {
 
 
     public void updateScore() {
-        score++;
+        score+=0.25;
 
         // تحديث أعلى النقاط إذا كانت النقاط الحالية أعلى
         if (score > highScore) {
-            highScore = score;
+            highScore = (int)score;
         }
     }
 
     public void draw(Graphics g) {
         // رسم النقاط الحالية
-        String scoreStr = String.valueOf(score);
+        String scoreStr = String.valueOf((int)score);
         for (int i = 0; i < scoreStr.length(); i++) {
             int digit = Character.getNumericValue(scoreStr.charAt(i));
             g.drawImage(numbers[digit], xScoreNow + (i * 50), y, null);
