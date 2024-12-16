@@ -96,9 +96,6 @@ class GamePanel extends JPanel implements ActionListener {
                     break;
                 }
             }
-            //   for (Kanz kanz : kanzs {
-            //   kanz.update();
-            //}
 
             for (Cloud cloud : clouds) {
                 cloud.update();
@@ -108,10 +105,6 @@ class GamePanel extends JPanel implements ActionListener {
             kanzs.removeIf(kanz -> kanz.getX() < 0);
             maks.removeIf(kanz -> kanz.getX() < 0);
 
-//            // Smooth score animation
-//            if (displayedScore < score) {
-//                displayedScore += Math.min(5, score - displayedScore);
-//            }
 
             // Play sound every 100 score gained
             if (counter.getScore() % 500 == 0 && counter.getScore() != 0 && !scoreSoundPlayed) {

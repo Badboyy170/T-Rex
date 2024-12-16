@@ -12,12 +12,8 @@ class Kanz{
         this.kanzImage = kanzImage;
     }
 
-    public Kanz(int width, int startY) {
-    }
-
     public void update() {
         x -= 5;
-
     }
 
     public void draw(Graphics g) {
