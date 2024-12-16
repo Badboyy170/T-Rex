@@ -19,7 +19,7 @@ class T_Rex {
     public T_Rex(int panelHeight) {
         x = 50;
         width = 640;
-        height = 320;
+        height = 340;
         yVelocity = 0;
         jumping = false;
         animationFrame = 0;
