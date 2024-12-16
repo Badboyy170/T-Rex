@@ -7,12 +7,14 @@ import java.awt.image.BufferedImage;
 class Mak {
     private int x, y ,width,height;
     private BufferedImage makImage;
+    private boolean debug;
 
     public Mak(int startX,  BufferedImage makImage) {
         this.x = startX;
         this.y = 370;
         this.width = 150;
         this.height = 120;
+        this.debug=true;
         this.makImage = resizeImage(makImage, width, height);
     }
 
@@ -30,6 +32,11 @@ class Mak {
     }
 
     public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
         g.drawImage(makImage, x, y, null);
     }
 
@@ -37,8 +44,8 @@ class Mak {
         return x;
     }
     public Polygon getPolygon() {
-        int[] xPoints = {x  , x + width  , x + width , x };
-        int[] yPoints = {y  , y , y + height , y + height };
+        int[] xPoints = {x+47 , x + width -32 , x + width-27 , x+32 };
+        int[] yPoints = {y +10 , y+10 , y + height-10 , y + height-10 };
         return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }
