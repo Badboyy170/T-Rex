@@ -46,8 +46,9 @@ class Obstacle {
     }
 
     public Polygon getPolygon() {
-        int[] xPoints = {x - 10, x + width + 10, x + width + 10, x - 10};
-        int[] yPoints = {y + 20, y + 20, y + height - 20, y + height - 20};
+        //(x1,y1)top left, (x2,y2)top right, (x3,y3)bottom right, (x4,y4)bottom left
+        int[] xPoints = {x - 10, x + width + 10, x + width-15, x + 25};
+        int[] yPoints = {y + 40, y , y + height - 20, y + height - 20};
         return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }
