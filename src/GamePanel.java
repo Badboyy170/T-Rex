@@ -270,8 +270,8 @@ class GamePanel extends JPanel implements ActionListener {
             obstacleImage = ImageIO.read(new File("Assets/cactus/cactus.png"));
 
             BufferedImage originalCloudImage = ImageIO.read(new File("Assets/cloud/cloud.png"));
-            BufferedImage originalKanzImage = ImageIO.read(new File("Assets/monster.png"));
-            BufferedImage originalMakImage = ImageIO.read(new File("Assets/heart.png"));
+            BufferedImage originalKanzImage = ImageIO.read(new File("Assets/potions/invisiblePotion.png"));
+            BufferedImage originalMakImage = ImageIO.read(new File("Assets/potions/resetSpeed.png"));
             int makWidth = originalKanzImage.getWidth() / 2; // Adjust the scale factor as needed
             int makHeight = originalKanzImage.getHeight() / 2; // Adjust the scale factor as needed
             int kanzWidth = originalKanzImage.getWidth() / 2; // Adjust the scale factor as needed
