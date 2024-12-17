@@ -109,7 +109,7 @@ class T_Rex {
     public void duck() {
         if (!jumping) {
             ducking = true;
-            y = groundY + 100;
+            y = groundY + height / 2;
         }
     }
 
@@ -168,8 +168,8 @@ class T_Rex {
             xPoints = new int[]{x + 380, x + width - 220, x + width - 300, x + 240};
             yPoints = new int[]{y + 60, y + 60, y + height - 80, y + height - 50};
         } else if (ducking) {
-            xPoints = new int[]{x + 380, x + width - 220, x + width - 300, x + 240};
-            yPoints = new int[]{y + 60, y + 60, y + height - 80, y + height - 50};
+            xPoints = new int[]{x + 130, x + width - 195, x + width - 195, x + 130};
+            yPoints = new int[]{y + 280, y + 280, y + height, y + height};
         } else {
             xPoints = new int[]{x + 130, x + width - 195, x + width - 195, x + 130};
             yPoints = new int[]{y + 220, y + 220, y + height, y + height};

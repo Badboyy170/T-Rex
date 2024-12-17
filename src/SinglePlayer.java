@@ -11,6 +11,7 @@ public class SinglePlayer extends JFrame {
     private boolean isEasy, isHard = false;
     private boolean isSelectEasy, isSelectHard = false;
 
+
     public SinglePlayer() {
         setTitle("T-Rex Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

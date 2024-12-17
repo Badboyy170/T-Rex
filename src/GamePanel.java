@@ -407,18 +407,11 @@ class GamePanel extends JPanel implements ActionListener {
             invisibilityPotionTimer.stop();
         }
         invisibilityPotionActive = true;
-        invisibilityPotionTimer = new Timer(45000, e -> invisibilityPotionActive = false); // 45 seconds
+        invisibilityPotionTimer = new Timer(10000, e -> invisibilityPotionActive = false); // 45 seconds
         invisibilityPotionTimer.setRepeats(false);
         invisibilityPotionTimer.start();
     }
 
-    private void drawInvisibleTime(Graphics g) {
-        if(invisibilityPotionActive){
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 24));
-            g.drawString("Invisibility Time: " + invisibilityPotionTimer.getDelay() / 1000 + "s", getWidth() / 2 - 150, 50);
-        }
-    }
 
     private void scheduleNextbirdObstacle() {
         if (birdObstacleTimer != null) {
@@ -455,7 +448,7 @@ class GamePanel extends JPanel implements ActionListener {
         if (kanzTimer != null) {
             kanzTimer.stop();
         }
-        int delay = 5000 + random.nextInt(5000);
+        int delay = 60000 + random.nextInt(60000);
         kanzTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
                 kanzs.add(new Kanz(getWidth() , kanzImage,1));
@@ -486,7 +479,7 @@ class GamePanel extends JPanel implements ActionListener {
         if (makTimer != null) {
             makTimer.stop();
         }
-        int delay = 5000 + random.nextInt(5000);
+        int delay = 1000 + random.nextInt(5000);
         makTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
                 maks.add(new Mak(getWidth(),  makImage,1));
