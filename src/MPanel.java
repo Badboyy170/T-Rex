@@ -70,12 +70,12 @@ class MPanel extends JPanel implements ActionListener {
     public void addNotify() {
         super.addNotify();
         SwingUtilities.invokeLater(() -> {
-            tRex1 = new T_Rex(50, getHeight() / 2 - 100, cameraY1, 1); // Adjusted position for tRex1
-            tRex2 = new T_Rex(50, getHeight() - 200, cameraY2, 2); // Adjusted position for tRex2
+            tRex1 = new T_Rex(50, getHeight() / 2, cameraY1, 1); // Adjusted position for tRex1
+            tRex2 = new T_Rex( getHeight() -500, cameraY2, 2); // Adjusted position for tRex2
             road1 = new Road(0, getHeight() / 2 - 100, getWidth());
             road2 = new Road(0, getHeight() - 100, getWidth());
             counter1 = new Counter(getWidth(), getHeight() / 2);
-            counter2 = new Counter(getWidth(), getHeight());
+            counter2 = new Counter(getWidth());
 
             int scaledWidth = restartIcon.getIconWidth();
             int scaledHeight = restartIcon.getIconHeight();
@@ -384,16 +384,20 @@ class MPanel extends JPanel implements ActionListener {
         tRex2.draw(g);
         counter1.draw(g);
         counter2.draw(g);
-        drawLives(g, lives1, 1);
-        drawLives(g, lives2, 2);
+        drawLives(g,10, lives1, 1);
+        drawLives(g,350, lives2, 2);
+        g.setColor(Color.decode("#5271ff"));
+        g.setFont(new Font("Arial", Font.BOLD, 25));
+        g.drawString("Name Player: " + namePlayer1, 10 , 110);
+        g.drawString("Name Player: " + namePlayer2, 10 , 450);
         if (gameOver) {
             g.drawImage(restartIcon.getImage(), restartIconBounds.x, restartIconBounds.y, null);
         }
     }
 
-    private void drawLives(Graphics g, int lives, int playerId) {
+    private void drawLives(Graphics g,int y1, int lives, int playerId) {
         int x = 10;
-        int y = 10;
+        int y = y1;
         int spacing = 10;
         Image heart = heartImage;
         for (int i = 0; i < lives; i++) {
@@ -427,7 +431,7 @@ class MPanel extends JPanel implements ActionListener {
             } else if (randomInt == 1) {
                 birdObstacles2.add(new birdObstacle(getWidth(), getHeight() - 100, 2));
             } else if (randomInt == 2) {
-                kanzs2.add(new Kanz(getWidth(), kanzImage, 2));
+                kanzs2.add(new Kanz(getWidth(),100, kanzImage, 2));
             }
         });
         obstacleTimer2.start();

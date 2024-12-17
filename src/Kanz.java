@@ -8,6 +8,15 @@ class Kanz {
     private BufferedImage kanzImage;
     private int playerId; // Add player identifier
 
+    public Kanz(int startX,int y1, BufferedImage kanzImage, int playerId) {
+        this.playerId = playerId; // Initialize player identifier
+        this.x = startX;
+        this.y = y1;
+        this.width = 150;
+        this.height = 120;
+        this.kanzImage = resizeImage(kanzImage, width, height);
+        this.debug = true;
+    }
     public Kanz(int startX, BufferedImage kanzImage, int playerId) {
         this.playerId = playerId; // Initialize player identifier
         this.x = startX;

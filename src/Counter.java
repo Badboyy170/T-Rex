@@ -12,6 +12,34 @@ public class Counter {
     private int highScore = 0;
     private int xScoreNow, xScoreHeight, xHI, y;
 
+
+    Counter(int panelWidth){
+
+        xScoreNow = panelWidth - 250;
+        xScoreHeight = panelWidth - 500;
+        xHI = panelWidth - 600;
+
+        y = 350;
+
+
+
+        // Load images
+        numbers = new BufferedImage[10];
+        try {
+            for (int i = 0; i < numbers.length; i++) {
+                BufferedImage originalImage = ImageIO.read(new File("Assets/counter/" + i + ".png"));
+                numbers[i] = resizeImage(originalImage, 90, 90);
+            }
+            BufferedImage originalJumpingImage = ImageIO.read(new File("Assets/counter/HI.png"));
+            HI_img = resizeImage(originalJumpingImage, 100, 100);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
     Counter(int panelWidth, int panelHeight){
 
         xScoreNow = panelWidth - 250;
