@@ -228,7 +228,7 @@ class GamePanel extends JPanel implements ActionListener {
         restartButton = ButtonFactory.createButton("Restart");
         menuButton = ButtonFactory.createButton("Menu");
         closeButton = ButtonFactory.createButton("Close Game");
-        chooseLevelButton = ButtonFactory.createButton("Choose Level");
+        //chooseLevelButton = ButtonFactory.createButton("Choose Level");
 
         continueButton.addActionListener(e -> {
             togglePause();
@@ -253,12 +253,12 @@ class GamePanel extends JPanel implements ActionListener {
                 topFrame.dispose(); // Close the game window
             }
         });
-        chooseLevelButton.addActionListener(e -> {
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            if (topFrame instanceof SinglePlayer) {
-                ((SinglePlayer) topFrame).goToMenuScreen(); // Go back to the menu screen
-            }
-        });
+//        chooseLevelButton.addActionListener(e -> {
+//            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+//            if (topFrame instanceof SinglePlayer) {
+//                ((SinglePlayer) topFrame).goToMenuScreen(); // Go back to the menu screen
+//            }
+//        });
 
         // Create a panel for buttons and add them
         buttonPanel = new JPanel(new GridBagLayout());
@@ -271,7 +271,7 @@ class GamePanel extends JPanel implements ActionListener {
         buttonPanel.add(restartButton, gbc);
         buttonPanel.add(menuButton, gbc);
         buttonPanel.add(closeButton, gbc);
-        buttonPanel.add(chooseLevelButton, gbc);
+       // buttonPanel.add(chooseLevelButton, gbc);
 
         add(buttonPanel, BorderLayout.CENTER);
 
@@ -567,16 +567,16 @@ class GamePanel extends JPanel implements ActionListener {
         if (closeButton != null) {
             closeButton.setVisible(false);
         }
-        if (chooseLevelButton != null) {
-            chooseLevelButton.setVisible(false);
-        }
+//        if (chooseLevelButton != null) {
+//            chooseLevelButton.setVisible(false);
+//        }
     }
 
     private void showButtons() {
         continueButton.setVisible(true);
         restartButton.setVisible(true);
         menuButton.setVisible(true);
-        chooseLevelButton.setVisible(true);
+        //chooseLevelButton.setVisible(true);
         closeButton.setVisible(true);
     }
 }

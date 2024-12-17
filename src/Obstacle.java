@@ -14,7 +14,7 @@ class Obstacle {
         this.height = 200;
         this.y = panelHeight - height; // Adjust y based on panel height
         this.obstacleImage = resizeImage(obstacleImage, width, height);
-        this.debug = true; // Initialize the debug variable
+        this.debug = false; // Initialize the debug variable
     }
 
     public Obstacle(int startX, int panelHeight, BufferedImage obstacleImage) {
@@ -23,7 +23,7 @@ class Obstacle {
         this.height = 200;
         this.y = panelHeight - height; // Adjust y based on panel height
         this.obstacleImage = resizeImage(obstacleImage, width, height);
-        this.debug = true; // Initialize the debug variable
+        this.debug = false; // Initialize the debug variable
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {

@@ -31,7 +31,7 @@ class T_Rex {
         this.animationFrame = 0;
         this.animationCounter = 0;
         this.groundY = y;
-        this.debug = true;
+        this.debug = false;
         this.cameraY = cameraY;
 
         // Load images
@@ -65,7 +65,7 @@ class T_Rex {
         animationCounter = 0;
         groundY = panelHeight - height;
         y = groundY;
-        debug = true;
+        debug = false;
         this.cameraY = cameraY;
 
         // Load images

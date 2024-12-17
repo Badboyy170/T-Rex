@@ -20,7 +20,7 @@ class birdObstacle {
         this.height = 120;
         this.y = panelHeight - height - 80; // Adjust y to be 50 pixels higher
         flyingImages = new BufferedImage[6];
-        this.debug = true; // Initialize the debug variable
+        this.debug = false; // Initialize the debug variable
         try {
             for (int i = 0; i < 6; i++) {
                 BufferedImage originalImage = ImageIO.read(new File("Assets/bird/" + (i + 1) + ".png"));
@@ -37,7 +37,7 @@ class birdObstacle {
         this.height = 120;
         this.y = panelHeight - height - 80; // Adjust y to be 50 pixels higher
         flyingImages = new BufferedImage[6];
-        this.debug = true; // Initialize the debug variable
+        this.debug = false; // Initialize the debug variable
         try {
             for (int i = 0; i < 6; i++) {
                 BufferedImage originalImage = ImageIO.read(new File("Assets/bird/" + (i + 1) + ".png"));

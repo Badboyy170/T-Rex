@@ -16,7 +16,7 @@ class Mak {
         this.y = 370;
         this.width = 150;
         this.height = 120;
-        this.debug = true;
+        this.debug = false;
         this.makImage = resizeImage(makImage, width, height);
     }
 

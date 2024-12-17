@@ -35,7 +35,7 @@ class MPanel extends JPanel implements ActionListener {
     private ImageIcon restartIcon;
     private Rectangle restartIconBounds;
     private JButton closeButton;
-    private JButton chooseLevelButton;
+    //private JButton chooseLevelButton;
     private Image heartImage;
     private boolean scoreSoundPlayed;
     private BufferedImage obstacleImage;
@@ -254,7 +254,7 @@ class MPanel extends JPanel implements ActionListener {
         restartButton = ButtonFactory.createButton("Restart");
         menuButton = ButtonFactory.createButton("Menu");
         closeButton = ButtonFactory.createButton("Close Game");
-        chooseLevelButton = ButtonFactory.createButton("Choose Level");
+        //chooseLevelButton = ButtonFactory.createButton("Choose Level");
 
         continueButton.addActionListener(e -> {
             togglePause();
@@ -280,12 +280,12 @@ class MPanel extends JPanel implements ActionListener {
                 topFrame.dispose();
             }
         });
-        chooseLevelButton.addActionListener(e -> {
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            if (topFrame instanceof MultiPlayer) {
-                ((MultiPlayer) topFrame).goToMenuScreen();
-            }
-        });
+//        chooseLevelButton.addActionListener(e -> {
+//            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+//            if (topFrame instanceof MultiPlayer) {
+//                ((MultiPlayer) topFrame).goToMenuScreen();
+//            }
+//        });
 
         buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
@@ -297,7 +297,7 @@ class MPanel extends JPanel implements ActionListener {
         buttonPanel.add(restartButton, gbc);
         buttonPanel.add(menuButton, gbc);
         buttonPanel.add(closeButton, gbc);
-        buttonPanel.add(chooseLevelButton, gbc);
+        //buttonPanel.add(chooseLevelButton, gbc);
 
         add(buttonPanel, BorderLayout.CENTER);
 
@@ -478,18 +478,31 @@ class MPanel extends JPanel implements ActionListener {
         if (paused) {
             paused = false;
             gameTimer.start();
+            startTimers();
+            hideButtons();
         } else {
             paused = true;
             gameTimer.stop();
+            stopTimers();
+            showButtons();
         }
     }
+
 
     private void hideButtons() {
         continueButton.setVisible(false);
         restartButton.setVisible(false);
         menuButton.setVisible(false);
         closeButton.setVisible(false);
-        chooseLevelButton.setVisible(false);
+        //chooseLevelButton.setVisible(false);
+    }
+
+    private void showButtons() {
+        continueButton.setVisible(true);
+        restartButton.setVisible(true);
+        menuButton.setVisible(true);
+        closeButton.setVisible(true);
+//        chooseLevelButton.setVisible(true);
     }
 
     private void activateSpeedPotion(int playerId) {
@@ -545,15 +558,33 @@ class MPanel extends JPanel implements ActionListener {
     }
 
     private void stopTimers() {
-        gameTimer.stop();
-        obstacleTimer1.stop();
-        obstacleTimer2.stop();
-        cloudTimer1.stop();
-        cloudTimer2.stop();
-        makTimer1.stop();
-        makTimer2.stop();
-        birdObstacleTimer1.stop();
-        birdObstacleTimer2.stop();
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        if (obstacleTimer1 != null) {
+            obstacleTimer1.stop();
+        }
+        if (obstacleTimer2 != null) {
+            obstacleTimer2.stop();
+        }
+        if (cloudTimer1 != null) {
+            cloudTimer1.stop();
+        }
+        if (cloudTimer2 != null) {
+            cloudTimer2.stop();
+        }
+        if (makTimer1 != null) {
+            makTimer1.stop();
+        }
+        if (makTimer2 != null) {
+            makTimer2.stop();
+        }
+        if (birdObstacleTimer1 != null) {
+            birdObstacleTimer1.stop();
+        }
+        if (birdObstacleTimer2 != null) {
+            birdObstacleTimer2.stop();
+        }
     }
 
     private void startTimers() {
