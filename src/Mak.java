@@ -5,16 +5,18 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 class Mak {
-    private int x, y ,width,height;
+    private int x, y, width, height;
     private BufferedImage makImage;
     private boolean debug;
+    private int playerId; // Add player identifier
 
-    public Mak(int startX,  BufferedImage makImage) {
+    public Mak(int startX, BufferedImage makImage, int playerId) {
+        this.playerId = playerId; // Initialize player identifier
         this.x = startX;
         this.y = 370;
         this.width = 150;
         this.height = 120;
-        this.debug=true;
+        this.debug = true;
         this.makImage = resizeImage(makImage, width, height);
     }
 
@@ -35,7 +37,7 @@ class Mak {
         if (debug) {
             Polygon polygon = getPolygon();
             g.setColor(Color.RED);
-            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints());
         }
         g.drawImage(makImage, x, y, null);
     }
@@ -43,9 +45,10 @@ class Mak {
     public int getX() {
         return x;
     }
+
     public Polygon getPolygon() {
-        int[] xPoints = {x+47 , x + width -32 , x + width-27 , x+32 };
-        int[] yPoints = {y +10 , y+10 , y + height-10 , y + height-10 };
+        int[] xPoints = {x + 47, x + width - 32, x + width - 27, x + 32};
+        int[] yPoints = {y + 10, y + 10, y + height - 10, y + height - 10};
         return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

@@ -14,7 +14,7 @@ public class SinglePlayer extends JFrame {
     public SinglePlayer() {
         setTitle("T-Rex Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setUndecorated(false); // Remove title bar
+        setUndecorated(true); // Remove title bar
 
 
 
@@ -105,8 +105,6 @@ public class SinglePlayer extends JFrame {
 
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-
 
 
         setVisible(true);

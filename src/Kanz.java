@@ -2,20 +2,20 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class Kanz{
+class Kanz {
     private boolean debug;
-    private int x, y,width,height;
+    private int x, y, width, height;
     private BufferedImage kanzImage;
+    private int playerId; // Add player identifier
 
-
-    public Kanz(int startX,  BufferedImage kanzImage) {
+    public Kanz(int startX, BufferedImage kanzImage, int playerId) {
+        this.playerId = playerId; // Initialize player identifier
         this.x = startX;
         this.y = 370;
         this.width = 150;
         this.height = 120;
         this.kanzImage = resizeImage(kanzImage, width, height);
-        this.debug=true;
-
+        this.debug = true;
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -35,7 +35,7 @@ class Kanz{
         if (debug) {
             Polygon polygon = getPolygon();
             g.setColor(Color.RED);
-            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints());
         }
         g.drawImage(kanzImage, x, y, null);
     }
@@ -43,9 +43,10 @@ class Kanz{
     public int getX() {
         return x;
     }
+
     public Polygon getPolygon() {
-        int[] xPoints = {x + 20 , x + width - 20 , x + width - 70, x +50 };
-        int[] yPoints = {y  + 30, y + 30 , y + height - 30, y + height -30 };
+        int[] xPoints = {x + 20, x + width - 20, x + width - 70, x + 50};
+        int[] yPoints = {y + 30, y + 30, y + height - 30, y + height - 30};
         return new Polygon(xPoints, yPoints, xPoints.length);
     }
 }

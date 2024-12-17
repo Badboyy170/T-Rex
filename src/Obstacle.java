@@ -5,6 +5,17 @@ class Obstacle {
     private int x, y, width, height;
     private BufferedImage obstacleImage;
     private boolean debug;
+    private int playerId; // Add player identifier
+
+    public Obstacle(int startX, int panelHeight, BufferedImage obstacleImage, int playerId) {
+        this.playerId = playerId; // Initialize player identifier
+        this.x = startX;
+        this.width = 170;
+        this.height = 200;
+        this.y = panelHeight - height; // Adjust y based on panel height
+        this.obstacleImage = resizeImage(obstacleImage, width, height);
+        this.debug = true; // Initialize the debug variable
+    }
 
     public Obstacle(int startX, int panelHeight, BufferedImage obstacleImage) {
         this.x = startX;

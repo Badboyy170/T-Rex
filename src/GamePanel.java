@@ -54,6 +54,7 @@ class GamePanel extends JPanel implements ActionListener {
     private Timer speedPotionTimer;
     private Timer invisibilityPotionTimer;
     private String namePlayer;
+    private int cameraY;
 
 
 
@@ -68,7 +69,7 @@ class GamePanel extends JPanel implements ActionListener {
     public void addNotify() {
         super.addNotify();
         SwingUtilities.invokeLater(() -> {
-            tRex = new T_Rex(getHeight(), namePlayer);
+            tRex = new T_Rex(getHeight(), cameraY,1);
             road = new Road(0, getHeight() - 100, getWidth()); // Initialize the road
             counter = new Counter(getWidth(),getHeight());
 
@@ -83,6 +84,7 @@ class GamePanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!gameOver && !paused) {
+            cameraY += 1; // Move the camera
             tRex.update();
             road.update(); // Update the road
             counter.updateScore();
@@ -119,7 +121,7 @@ class GamePanel extends JPanel implements ActionListener {
                     } else {
                         obstacles.clear();
                         clouds.clear();
-                        tRex = new T_Rex(getHeight(), namePlayer);
+                        tRex = new T_Rex(getHeight(), cameraY,1);
                     }
                     counter.resetScore();
                     break;
@@ -140,7 +142,7 @@ class GamePanel extends JPanel implements ActionListener {
                     } else {
                         birdObstacles.clear();
                         clouds.clear();
-                        tRex = new T_Rex(getHeight(), namePlayer);
+                        tRex = new T_Rex(getHeight(), cameraY,1);
                     }
                     counter.resetScore();
                     break;
@@ -456,7 +458,7 @@ class GamePanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         kanzTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                kanzs.add(new Kanz(getWidth() , kanzImage));
+                kanzs.add(new Kanz(getWidth() , kanzImage,1));
                 scheduleNextKanz();
             }
         });
@@ -487,7 +489,7 @@ class GamePanel extends JPanel implements ActionListener {
         int delay = 5000 + random.nextInt(5000);
         makTimer = new Timer(delay, e -> {
             if (!gameOver && !paused) {
-                maks.add(new Mak(getWidth(),  makImage));
+                maks.add(new Mak(getWidth(),  makImage,1));
                 scheduleNextMak();
             }
         });
@@ -523,7 +525,7 @@ class GamePanel extends JPanel implements ActionListener {
         maks.clear();
         counter.resetScore();
 
-        tRex = new T_Rex(getHeight(), namePlayer);
+        tRex = new T_Rex(getHeight(), cameraY,1);
         road = new Road(0, getHeight() - 100, getWidth()); // Reinitialize the road
 
 
