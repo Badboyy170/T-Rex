@@ -323,8 +323,8 @@ class MPanel extends JPanel implements ActionListener {
 
     private void display(Graphics g) {
         road.draw(g);
-        tRex1.draw(g);
-        tRex2.draw(g);
+        tRex1.draw(g,0);
+        tRex2.draw(g,0);
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(g);
         }
