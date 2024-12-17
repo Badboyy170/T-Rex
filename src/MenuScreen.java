@@ -57,7 +57,7 @@ public class MenuScreen extends JPanel {
             {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Welcome to T-Rex Game!\n\n" +
+                        "Welcome to T-Rex Game!\n \n" +
                                 "Game Instructions:\n\n" +
                                 "- The goal is to survive as long as possible while avoiding obstacles and collecting power-ups.\n\n" +
                                 "Gameplay:\n" +
