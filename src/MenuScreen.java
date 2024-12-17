@@ -54,7 +54,35 @@ public class MenuScreen extends JPanel {
         });
 
         aboutGameButton.addActionListener(e ->
-                JOptionPane.showMessageDialog(frame, "This is the T-Rex game! A fun endless runner game.")
+            {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Welcome to T-Rex Game!\n\n" +
+                                "Game Instructions:\n\n" +
+                                "- The goal is to survive as long as possible while avoiding obstacles and collecting power-ups.\n\n" +
+                                "Gameplay:\n" +
+                                "1. Press 'Space' to jump over obstacles (e.g., cacti).\n" +
+                                "2. Collect bottles of power (Power Bottles) to become invisible for 10 seconds.\n" +
+                                "3. Collect hearts to gain an extra life (adds to your health).\n" +
+                                "4. Avoid obstacles while collecting as many points as possible.\n\n" +
+                                "Difficulty Levels:\n" +
+                                "- Easy Level:\n" +
+                                "  * You have 3 lives.\n" +
+                                "  * The game speed is moderate.\n" +
+                                "- Hard Level:\n" +
+                                "  * You have only 1 life.\n" +
+                                "  * The game speed is faster.\n" +
+                                "  * Obstacles appear more frequently.\n\n" +
+                                "Special Features:\n" +
+                                "- Power Bottles:\n" +
+                                "  * When collected, the T-Rex becomes invisible for 10 seconds and can pass through obstacles without losing lives.\n" +
+                                "- Hearts:\n" +
+                                "  * Each collected heart increases your lives by 1 (only in Easy Mode).\n\n" +
+                                "Good Luck and Have Fun!",
+                        "Game Instructions",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
         );
 
         closeButton.addActionListener(e -> frame.dispose());
