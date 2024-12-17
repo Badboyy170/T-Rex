@@ -17,9 +17,10 @@ class T_Rex {
     private int animationFrame;
     private int groundY;
     private int animationCounter; // Add a counter for animation speed control
+    private String namePlayer;
     private static final int ANIMATION_SPEED = 5; // Adjust this value to control the speed
 
-    public T_Rex(int panelHeight) {
+    public T_Rex(int panelHeight, String namePlayer) {
         x = 50;
         width = 640;
         height = 340;
@@ -30,6 +31,7 @@ class T_Rex {
         groundY = panelHeight - height;
         y = groundY;
         debug = true; // Initialize the debug variable
+        this.namePlayer = namePlayer;
 
         // Load images
         runningImages = new BufferedImage[6];
@@ -107,17 +109,20 @@ class T_Rex {
         }
     }
 
-    public void draw(Graphics g, int cameraY) {
-        int distance = Math.max(0, Math.min(y - cameraY, 1000)); // Clamp distance between 0 and 1000
-        double scale = 1.0 / (1 + distance * 0.001); // Adjust the scaling factor as needed
-        int scaledWidth = (int) (width * scale);
-        int scaledHeight = (int) (height * scale);
+    public void draw(Graphics g) {
+        if (debug) {
+            Polygon polygon = getPolygon();
+            g.setColor(Color.RED);
+            g.fillPolygon(polygon.getXPoints(), polygon.getYPoints(), polygon.getNPoints()); // Draw red background for debugging
+        }
         if (jumping) {
-            g.drawImage(jumpingImage, x, y, scaledWidth, scaledHeight, null);
+
         } else if (ducking) {
-            g.drawImage(duckingImages[animationFrame % duckingImages.length], x, y, scaledWidth, scaledHeight, null);
+            g.drawImage(duckingImages[animationFrame % duckingImages.length], x, y, null);
         } else {
-            g.drawImage(runningImages[animationFrame % runningImages.length], x, y, scaledWidth, scaledHeight, null);
+
+//            g.drawString(namePlayer, x + 280 , y + 200);
+            g.drawImage(runningImages[animationFrame % runningImages.length], x, y, null);
         }
     }
     /*

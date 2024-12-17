@@ -43,11 +43,18 @@ public class SinglePlayer extends JFrame {
 
         // Create difficulty buttons
         JButton easyButton = ButtonFactory.createButton("Easy");
-        easyButton.setBackground(Color.decode("#294B6E"));
+        easyButton.setBackground(Color.decode("#edf6f9")); // تعديل على خلفية الزرار
+        easyButton.setForeground(Color.decode("#006d77")); // تعديل على لون الخط بداخل الزر
+
+
         JButton hardButton = ButtonFactory.createButton("Hard");
-        hardButton.setBackground(Color.decode("#294B6E"));
+        hardButton.setBackground(Color.decode("#edf6f9")); // تعديل على خلفية الزرار
+        hardButton.setForeground(Color.decode("#006d77")); // تعديل على لون الخط بداخل الزر
+
 
         JButton startGameButton = ButtonFactory.createButton("Start");
+        startGameButton.setBackground(Color.decode("#006d77")); // تعديل على خلفية الزرار
+        startGameButton.setForeground(Color.decode("#edf6f9")); // تعديل على لون الخط بداخل الزر
 
 
 
@@ -57,8 +64,8 @@ public class SinglePlayer extends JFrame {
                 isHard = false;
                 isSelectEasy = true;
                 isSelectHard = false;
-                easyButton.setBackground(Color.decode("#610061")); // لون التحديد
-                hardButton.setBackground(Color.decode("#294B6E")); // لون غير محدد
+                easyButton.setBackground(Color.decode("#83c5be")); // لون التحديد
+                hardButton.setBackground(Color.decode("#edf6f9")); // لون غير محدد
             }
         });
 
@@ -68,8 +75,8 @@ public class SinglePlayer extends JFrame {
                 isEasy = false;
                 isSelectHard = true;
                 isSelectEasy = false;
-                hardButton.setBackground(Color.decode("#610061")); // لون التحديد
-                easyButton.setBackground(Color.decode("#294B6E")); // لون غير محدد
+                hardButton.setBackground(Color.decode("#83c5be")); // لون التحديد
+                easyButton.setBackground(Color.decode("#edf6f9")); // لون غير محدد
             }
         });
 
@@ -79,11 +86,11 @@ public class SinglePlayer extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please Enter fields\n- Enter name\n- Choose levels", "Error", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 if(isEasy){
-                    kindLevels = "Easy";
+                    kindLevels = "easy";
                 }else{
-                    kindLevels = "Hard";
+                    kindLevels = "hard";
                 }
-                startGame(kindLevels);
+                startGame(kindLevels, namePlayer);
             }
         });
 
@@ -110,9 +117,9 @@ public class SinglePlayer extends JFrame {
         SwingUtilities.invokeLater(MenuScreen::new); // Run MenuScreen
     }
 
-    private void startGame(String difficulty) {
+    private void startGame(String difficulty, String namePlayer) {
         remove(getContentPane().getComponent(0)); // Remove the difficulty panel
-        gamePanel = new GamePanel(difficulty);
+        gamePanel = new GamePanel(difficulty, namePlayer);
         add(gamePanel);
         revalidate();
         gamePanel.requestFocusInWindow(); // Request focus on the game panel
